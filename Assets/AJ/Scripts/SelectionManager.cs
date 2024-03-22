@@ -6,6 +6,9 @@ using UnityEngine;
 public class SelectionManager : MonoBehaviour
 {
     public RectTransform selectBox;
+    [Tooltip("The tendency of selected units to retain their formation when moving between destinations. " +
+        "A lower values means a closer move destination to the group at which point they will break formation in order to get to said point.")]
+    public float formationRetainment = 0.5f;
 
     List<Unit> newSelected, selected, pending;
 
@@ -82,6 +85,27 @@ public class SelectionManager : MonoBehaviour
             }
 
             selectBox.gameObject.SetActive(false);
+        }
+
+        // Handle moving units
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = cam.nearClipPlane;
+            // Raycast against the environment or other units
+            if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, (1 << 0) | (1 << 3)))
+            {
+                if (hit.collider.TryGetComponent(out Unit target))
+                {
+                    foreach (Unit u in selected)
+                        u.Follow(target);
+                }
+                else
+                {
+                    foreach (Unit u in selected)
+                        u.MoveTo(hit.point);
+                }
+            }
         }
     }
 

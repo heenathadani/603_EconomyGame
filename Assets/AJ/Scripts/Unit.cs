@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum Hostility
 {
@@ -10,6 +11,7 @@ public enum Hostility
     Hostile
 }
 
+[RequireComponent(typeof(Collider), typeof(NavMeshAgent))]
 public class Unit : MonoBehaviour
 {
     // Event handlers
@@ -25,16 +27,18 @@ public class Unit : MonoBehaviour
     public float maxHP = 0f;
     [Tooltip("If this unit is immune to damage. If Max HP was set to 0, this does not matter.")]
     public bool immune = false;
-    public float moveSpeed = 5f;
 
     [Tooltip("Hostility of this unit.")]
     public Hostility hostility = Hostility.Friendly;
 
     public GameObject selectionPrefab;
     GameObject selectIcon;
+    NavMeshAgent agent;
 
     float hp;
     bool selected = false;
+    float stopCD = 0.2f;
+    float stopTmr = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +56,7 @@ public class Unit : MonoBehaviour
 
         hp = maxHP;
         if (hp == 0f) immune = true;
+        agent = GetComponent<NavMeshAgent>();
 
         if (selectionPrefab)
         {
@@ -73,7 +78,12 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        stopTmr += Time.deltaTime;
+
+        if (stopTmr >= stopCD && agent.velocity.sqrMagnitude <= Mathf.Pow(agent.speed * 0.1f, 2))
+        {
+            agent.isStopped = true;
+        }
     }
 
     public void Select()
@@ -135,5 +145,16 @@ public class Unit : MonoBehaviour
     public void Heal(float healAmt)
     {
         hp = Mathf.Clamp(healAmt, 0, maxHP);
+    }
+
+    public void MoveTo(Vector3 destination)
+    {
+        stopTmr = 0f;
+        agent.isStopped = false;
+        agent.destination = destination;
+    }
+    public void Follow(Unit other)
+    {
+        stopTmr = 0f;
     }
 }
