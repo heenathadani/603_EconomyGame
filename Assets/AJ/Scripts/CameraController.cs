@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -18,6 +19,7 @@ public class CameraController : MonoBehaviour
     {
         Vector3 inputDir = new();
         Vector3 pos = transform.position;
+        pos.y = groundHeight;
 
         // handle input
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -30,21 +32,13 @@ public class CameraController : MonoBehaviour
             inputDir.z = 1;
 
         // Handle camera height from ground
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, 8f, Vector3.down, 100f);
-        System.Array.Sort(hits, (a, b) => a.point.y.CompareTo(b.point.y));
-        if (hits.Length > 0)
+        // We are spherecasting AND raycasting. This allows for smooth interpolation
+        // as the camera traverses a potentially bumpy ground.
+        if (Physics.SphereCast(transform.position, 8f, Vector3.down, out RaycastHit hit) &&
+            Physics.Raycast(transform.position, Vector3.down, out RaycastHit bottomHit))
         {
-            float dot = Mathf.Min(Vector3.Dot(hits[0].normal, Vector3.up), 1);
-            if (Mathf.Approximately(dot, 1f))
-            {
-                pos.y = hits[0].point.y;
-            }  
-            else if (hits.Length > 1)
-            {
-                float halfpi = Mathf.PI / 2f;
-                pos.y = Mathf.Lerp(hits[0].point.y, hits[1].point.y, Mathf.Acos(dot));
-            }
-            pos.y += 28f;
+            float dot = Mathf.Min(Vector3.Dot(hit.normal, Vector3.up), 1);
+            pos.y += Mathf.Lerp(hit.point.y, bottomHit.point.y, Mathf.Acos(dot));
         }
 
         // Move the camera
