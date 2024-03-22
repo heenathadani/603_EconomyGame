@@ -81,8 +81,7 @@ public class Unit : MonoBehaviour
         if (!selected)
         {
             selected = true;
-            if (selectIcon)
-                selectIcon.SetActive(true);
+            SetShowSelection(true);
             OnSelected?.Invoke(this);
         }
     }
@@ -91,11 +90,17 @@ public class Unit : MonoBehaviour
         if (selected)
         {
             selected = false;
-            if (selectIcon)
-                selectIcon.SetActive(false);
+            SetShowSelection(false);
             OnDeselected?.Invoke(this);
         }
     }
+    public void SetShowSelection(bool showSelection)
+    {
+        if (selectIcon)
+            selectIcon.SetActive(showSelection);
+    }
+
+    
     public void SetHostility(Hostility hostility)
     {
         this.hostility = hostility;

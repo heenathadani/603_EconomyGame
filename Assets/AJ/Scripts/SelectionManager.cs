@@ -43,22 +43,29 @@ public class SelectionManager : MonoBehaviour
         // Update selection
         else if (Input.GetMouseButton(0))
         {
+            // Set select box dimensions
             Vector2 area = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - mouseStart;
             selectBox.anchoredPosition = mouseStart + area / 2f;
             selectBox.sizeDelta = area.Abs();
+
+            // Get units in selection area
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
-
-            foreach (Unit u in allFriendlyUnits)
-                AddUnitsInSelectionBox(allFriendlyUnits, ref newSelected, bounds);
-
-            // No friendly units were selected, so instead check if there's an enemy unit to select
-            if (selected.Count == 0)
-                AddUnitsInSelectionBox(allOtherUnits, ref newSelected, bounds, true);
+            foreach (Unit u in GetUnitsInSelectionBox(allFriendlyUnits, bounds))
+            {
+                u.SetShowSelection(true);
+            }
         }
         // End selection; retrieve all units in the selection box
         else if (Input.GetMouseButtonUp(0))
         {
             selectBox.gameObject.SetActive(false);
+
+            // Get units in selection area. If no friendlies, check if there's another type of unit to select.
+            Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
+            newSelected = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
+            if (selected.Count == 0)
+                newSelected = GetUnitsInSelectionBox(allOtherUnits, bounds, true);
+
             if (newSelected.Count > 0)
             {
                 foreach (Unit u in selected)
@@ -70,7 +77,6 @@ public class SelectionManager : MonoBehaviour
                 foreach (Unit u in selected)
                     u.Select();
             }
-            
         }
     }
 
@@ -81,18 +87,21 @@ public class SelectionManager : MonoBehaviour
     /// <param name="selectedList">The list to append units inside the selection box to</param>
     /// <param name="bounds">The selection box bounds</param>
     /// <param name="oneUnitOnly">If true, only populates the selected list with the first unit that lies in the selection box.</param>
-    void AddUnitsInSelectionBox(HashSet<Unit> unitsToCheck, ref List<Unit> selectedList, Bounds bounds, bool oneUnitOnly = false)
+    List<Unit> GetUnitsInSelectionBox(HashSet<Unit> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
     {
+        List<Unit> selectedUnits = new();
+
         // Simple AABB test to see if the unit's inside the selection box
         foreach (Unit u in unitsToCheck)
         {
             Vector2 unitPos = cam.WorldToScreenPoint(u.transform.position);
             if (unitPos.x > bounds.min.x && unitPos.x < bounds.max.x && unitPos.y > bounds.min.y && unitPos.y < bounds.max.y)
             {
-                selectedList.Add(u);
+                selectedUnits.Add(u);
                 u.Select();
                 if (oneUnitOnly) break;
             }
         }
+        return selectedUnits;
     }
 }
