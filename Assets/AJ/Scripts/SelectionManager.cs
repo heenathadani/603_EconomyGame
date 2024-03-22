@@ -7,7 +7,7 @@ public class SelectionManager : MonoBehaviour
 {
     public RectTransform selectBox;
 
-    List<Unit> newSelected, selected;
+    List<Unit> newSelected, selected, pending;
 
     // Sets automatically handle dupes
     public static HashSet<Unit> allFriendlyUnits, allOtherUnits;
@@ -19,6 +19,7 @@ public class SelectionManager : MonoBehaviour
     {
         newSelected = new();
         selected = new();
+        pending = new();
         allFriendlyUnits = new();
         allOtherUnits = new();
         cam = GetComponent<Camera>();
@@ -50,20 +51,22 @@ public class SelectionManager : MonoBehaviour
 
             // Get units in selection area
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
-            foreach (Unit u in GetUnitsInSelectionBox(allFriendlyUnits, bounds))
-            {
+            List<Unit> newPending = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
+            foreach (Unit u in pending)
+                u.SetShowSelection(false);
+            pending = newPending;
+            foreach (Unit u in pending)
                 u.SetShowSelection(true);
-            }
         }
         // End selection; retrieve all units in the selection box
         else if (Input.GetMouseButtonUp(0))
         {
-            selectBox.gameObject.SetActive(false);
+            pending.Clear();
 
             // Get units in selection area. If no friendlies, check if there's another type of unit to select.
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
             newSelected = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
-            if (selected.Count == 0)
+            if (newSelected.Count == 0)
                 newSelected = GetUnitsInSelectionBox(allOtherUnits, bounds, true);
 
             if (newSelected.Count > 0)
@@ -77,6 +80,8 @@ public class SelectionManager : MonoBehaviour
                 foreach (Unit u in selected)
                     u.Select();
             }
+
+            selectBox.gameObject.SetActive(false);
         }
     }
 
@@ -90,6 +95,16 @@ public class SelectionManager : MonoBehaviour
     List<Unit> GetUnitsInSelectionBox(HashSet<Unit> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
     {
         List<Unit> selectedUnits = new();
+
+        // For a single click and no drag, raycast against Unit layer
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = cam.nearClipPlane;
+        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, 1 << 3))
+        {
+            selectedUnits.Add(hit.collider.GetComponent<Unit>());
+            if (oneUnitOnly)
+                return selectedUnits;
+        }
 
         // Simple AABB test to see if the unit's inside the selection box
         foreach (Unit u in unitsToCheck)
