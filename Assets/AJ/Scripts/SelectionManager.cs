@@ -17,7 +17,7 @@ public class SelectionManager : MonoBehaviour
 
     Vector2 mouseStart;
     Camera cam;
-
+    public BiomassBank biomassBank;
     private void Awake()
     {
         newSelected = new();
@@ -107,6 +107,12 @@ public class SelectionManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void DepositBiomass(Unit worker)
+    {
+        biomassBank.AddBiomass(worker.biomass);
+        worker.biomass = 0;
     }
 
     /// <summary>

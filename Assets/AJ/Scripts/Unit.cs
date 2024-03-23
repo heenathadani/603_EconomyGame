@@ -40,6 +40,8 @@ public class Unit : MonoBehaviour
     float stopCD = 0.2f;
     float stopTmr = 0;
 
+    public int biomass = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -156,5 +158,9 @@ public class Unit : MonoBehaviour
     public void Follow(Unit other)
     {
         stopTmr = 0f;
+    }
+    public void AddBiomass(int amount)
+    {
+        biomass += amount;
     }
 }
