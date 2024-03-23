@@ -4,35 +4,41 @@ using UnityEngine;
 
 public class BiomassBank : MonoBehaviour
 {
-    public int biomass = 0;
+    [SerializeField]
+    private int biomass = 100;
+    public int Biomass
+    {
+        get { return biomass; }
+        private set 
+        {
+            UpdateBiomassText(value);
+            biomass = value; 
+        }
+    }
     public TMPro.TextMeshProUGUI biomassText;
 
     private void Start()
     {
-        biomassText.text = "Biomass: " + biomass;
+        UpdateBiomassText(Biomass);
     }
 
     public void AddBiomass(int amount)
     {
-        biomass += amount;
-        UpdateBiomassText();
+        Biomass += amount;
     }
 
     public bool SpendBiomass(int amount)
     {
-        if (biomass >= amount)
+        if (Biomass >= amount)
         {
-            biomass -= amount;
-            UpdateBiomassText();
+            Biomass -= amount;
             return true;
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
-    private void UpdateBiomassText()
+
+    public void UpdateBiomassText(int amount) // Update this method
     {
-        biomassText.text = "Biomass: " + biomass;
+        biomassText.text = "Biomass: " + amount;
     }
 }

@@ -40,8 +40,7 @@ public class Unit : MonoBehaviour
     float stopCD = 0.2f;
     float stopTmr = 0;
 
-    public int biomass = 0;
-
+    public BiomassBank biomassBank;
     // Start is called before the first frame update
     void Start()
     {
@@ -159,8 +158,17 @@ public class Unit : MonoBehaviour
     {
         stopTmr = 0f;
     }
-    public void AddBiomass(int amount)
+
+    public void OnTriggerEnter(Collider other)
     {
-        biomass += amount;
+        Biomass biomass = other.GetComponent<Biomass>();
+        if (biomass)
+        {
+            biomass.CollectResource(this);
+        }
+    }
+    public void CollectBiomass(int amount) 
+    {
+        biomassBank.AddBiomass(amount); 
     }
 }
