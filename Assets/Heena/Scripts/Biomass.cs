@@ -8,7 +8,7 @@ public class Biomass : MonoBehaviour
     public int biomassAmount = 100;
     public void CollectResource(Unit worker)
     {
-        worker.AddBiomass(biomassAmount);
+        worker.CollectBiomass(biomassAmount); 
         Destroy(gameObject);
     }
 }

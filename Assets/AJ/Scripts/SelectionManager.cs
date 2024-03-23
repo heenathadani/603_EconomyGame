@@ -109,12 +109,6 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
-    public void DepositBiomass(Unit worker)
-    {
-        biomassBank.AddBiomass(worker.biomass);
-        worker.biomass = 0;
-    }
-
     /// <summary>
     /// Adds all units from the given set that lie within the given bounds to the selected units list
     /// </summary>
