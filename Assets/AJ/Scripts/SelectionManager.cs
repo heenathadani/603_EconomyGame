@@ -50,7 +50,7 @@ public class SelectionManager : MonoBehaviour
             // Set select box dimensions
             Vector2 area = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - mouseStart;
             selectBox.anchoredPosition = mouseStart + area / 2f;
-            selectBox.sizeDelta = area.Abs();
+            selectBox.sizeDelta = new(Mathf.Abs(area.x), Mathf.Abs(area.y));
 
             // Get units in selection area
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
