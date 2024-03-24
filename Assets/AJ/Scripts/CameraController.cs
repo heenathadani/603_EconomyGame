@@ -9,6 +9,14 @@ public class CameraController : MonoBehaviour
     public float groundHeight = 50f;
     public Vector3 orientation = new(60, 45, 0);
 
+    private void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+    private void OnDisable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
     // Start is called before the first frame update
     void Start()
     {
