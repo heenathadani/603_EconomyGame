@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8798645893084151136}
   m_Layer: 3
   m_Name: BasicUnit
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,6 +125,7 @@ MonoBehaviour:
   immune: 0
   hostility: 0
   selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
+  biomassBank: {fileID: 0}
 --- !u!195 &8798645893084151136
 NavMeshAgent:
   m_ObjectHideFlags: 0
