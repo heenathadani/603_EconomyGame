@@ -23,13 +23,13 @@ public class CameraController : MonoBehaviour
         pos.y = groundHeight;
 
         // handle input
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= 0)
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= 1)
             inputDir.x = -1;
-        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width)
+        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - 1)
             inputDir.x = 1;
-        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= 0)
+        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= 1)
             inputDir.z = -1;
-        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height)
+        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - 1)
             inputDir.z = 1;
 
         // Handle camera height from ground

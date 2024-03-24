@@ -2,35 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitSpawner : MonoBehaviour
+[RequireComponent(typeof(RallyPoint))]
+public class UnitSpawner : UnitAbility
 {
     public BiomassBank biomassBank;
-    public int workerCost = 50;
     public GameObject unitWorkerPrefab;
-    public Transform unitsParent;
+
+    Vector3 spawnPt;
 
     private void Start()
     {
-        unitsParent = GameObject.Find("Units").transform;
+        spawnPt = transform.position;
+        spawnPt.z -= 0.5f;
     }
-    public void SpawnWorker()
-    {
-        if (biomassBank.SpendBiomass(workerCost))
-        {
-            int unitLayer = LayerMask.NameToLayer("Unit");
-            Collider[] units = Physics.OverlapSphere(unitsParent.transform.position, 100f, 1 << unitLayer);
 
-            if (units.Length > 0)
-            {
-                Vector3 spawnPosition = units[Random.Range(0, units.Length)].transform.position + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
-                GameObject newWorker = Instantiate(unitWorkerPrefab, spawnPosition, Quaternion.identity, unitsParent);
-                newWorker.layer = unitLayer;
-            }
+    public override void Execute()
+    {
+        if (biomassBank.SpendBiomass(cost))
+        {
+            // Spawn the new worker and set it to Unit layer
+            GameObject newWorker = Instantiate(unitWorkerPrefab, spawnPt, Quaternion.identity);
+            newWorker.layer = LayerMask.NameToLayer("Unit");
+            Unit rallyUnit = GetComponent<RallyPoint>().GetRallyUnit();
+            if (rallyUnit)
+                newWorker.GetComponent<Unit>().Follow(rallyUnit);
             else
-            {
-                GameObject newWorker = Instantiate(unitWorkerPrefab, unitsParent.transform.position, Quaternion.identity, unitsParent);
-                newWorker.layer = unitLayer;
-            }
+                newWorker.GetComponent<Unit>().MoveTo(GetComponent<RallyPoint>().GetRallyPoint());
         }
     }
 }
