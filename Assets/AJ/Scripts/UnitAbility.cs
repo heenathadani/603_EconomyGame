@@ -9,19 +9,22 @@ public abstract class UnitAbility : MonoBehaviour
     public float cooldown = 0f;
     public string abilityName = "Ability";
     public string description = "Ability Description";
-    public Sprite sprite;
+    public Sprite abilitySprite;
+
+    [HideInInspector]
+    public float timer = 0f;
 
     const string defaultImgPath = "Assets/Art/Sprites/Ability_Default.png";
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!sprite)
+        if (!abilitySprite)
         {
             Texture2D imgTex = new Texture2D(128, 128);
             if (imgTex.LoadImage(File.ReadAllBytes(defaultImgPath)))
             {
-                sprite = Sprite.Create(imgTex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
+                abilitySprite = Sprite.Create(imgTex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
             }
         }
     }
@@ -29,8 +32,14 @@ public abstract class UnitAbility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        timer = Mathf.Clamp(timer - Time.deltaTime, 0f, cooldown);
     }
 
+    /// <summary>
+    /// Called when the player clicks on the corresponding Unit Ability button.
+    /// Override this method in your specific ability scripts.
+    /// The HUDController already handles checking the ability's cost and cooldown before executing,
+    /// so no need to also do it here.
+    /// </summary>
     public abstract void Execute();
 }

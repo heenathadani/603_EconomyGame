@@ -16,11 +16,8 @@ public class UnitSpawner : UnitAbility
 
     public override void Execute()
     {
-        if (GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>().SpendBiomass(cost))
-        {
-            // Spawn the new worker and set it to Unit layer
-            GameObject newWorker = Instantiate(unitWorkerPrefab, spawnPt, Quaternion.identity);
-            newWorker.layer = LayerMask.NameToLayer("Unit");
-        }
+        // Spawn the new worker and set it to Unit layer
+        GameObject newWorker = Instantiate(unitWorkerPrefab, spawnPt, Quaternion.identity);
+        newWorker.layer = LayerMask.NameToLayer("Unit");
     }
 }

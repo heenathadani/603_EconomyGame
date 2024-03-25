@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class HUDController : MonoBehaviour
 {
     public GameObject abilitiesBoard;
+    public BiomassBank biomassBank;
 
     List<Button> abilityButtons;
 
@@ -31,10 +32,19 @@ public class HUDController : MonoBehaviour
         {
             if (i < abilityButtons.Count)
             {
-                abilityButtons[i].GetComponent<Image>().sprite = abilities[i].sprite;
+                UnitAbility a = abilities[i];
+                
                 abilityButtons[i].onClick.RemoveAllListeners();
-                abilityButtons[i].onClick.AddListener(abilities[i].Execute);
-                abilityButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = abilities[i].abilityName;
+                abilityButtons[i].onClick.AddListener(() =>
+                    {
+                        if (a.timer <= 0f && biomassBank.SpendBiomass(a.cost))
+                        {
+                            a.timer = a.cooldown;
+                            a.Execute();
+                        }
+                    });
+                abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
+                abilityButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = a.abilityName;
                 abilityButtons[i].gameObject.SetActive(true);
             }
             else
