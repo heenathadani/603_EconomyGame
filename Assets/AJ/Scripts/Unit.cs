@@ -17,7 +17,6 @@ public class Unit : MonoBehaviour
     // Event handlers
     public delegate void KilledHandler(Unit destroyedUnit);
     public event KilledHandler OnKilled;
-
     public delegate void SelectedHandler(Unit selectedUnit);
     public event SelectedHandler OnSelected;
     public delegate void DeselectedHandler(Unit deselectedUnit);
