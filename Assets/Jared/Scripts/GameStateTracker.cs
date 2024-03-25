@@ -16,9 +16,23 @@ public class GameStateTracker : MonoBehaviour
     [SerializeField]
     Transform BioMassParent;
 
+    [SerializeField]
+    Unit Capital;
     private void Awake()
     {
         GameStart = Time.time;
+    }
+    private void OnCapitalKilled(Unit destroyedUnit)
+    {
+        _state = GameState.Fail;
+    }
+    private void OnEnable()
+    {
+        Capital.OnKilled += OnCapitalKilled;
+    }
+    private void OnDisable()
+    {
+        Capital.OnKilled -= OnCapitalKilled;
     }
     void Update()
     {
@@ -30,6 +44,8 @@ public class GameStateTracker : MonoBehaviour
         {
             _state = GameState.Fail;
         }
+
+
         switch(_state)
         {
             case GameState.Win:
