@@ -94,7 +94,7 @@ public class SelectionManager : MonoBehaviour
         }
 
         // Handle moving units
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && selected[0].hostility == Hostility.Friendly)
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = cam.nearClipPlane;
