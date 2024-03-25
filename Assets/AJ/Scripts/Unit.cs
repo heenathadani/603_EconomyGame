@@ -31,7 +31,11 @@ public class Unit : MonoBehaviour
 
     public float attackDmg = 0;
     public float attackRange = 0;
+    [Tooltip("How long the attack lasts. The unit cannot move until their attack completes.")]
+    public float attackDuration = 0.25f;
+    float atkDurTmr = 0f;
     public float attackRate = 0.15f;
+    float atkTmr = 0f;
 
     public GameObject selectionPrefab;
     GameObject selectIcon;
@@ -41,9 +45,11 @@ public class Unit : MonoBehaviour
     bool selected = false;
     float stopCD = 0.2f;
     float stopTmr = 0;
+    bool attacking = false;
+    Unit followUnit;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         // Add this unit to the list ofselectable units
         switch (hostility)
@@ -84,10 +90,33 @@ public class Unit : MonoBehaviour
     void Update()
     {
         stopTmr += Time.deltaTime;
+        atkTmr += Time.deltaTime;
+        atkDurTmr += Time.deltaTime;
 
         if (stopTmr >= stopCD && agent.velocity.sqrMagnitude <= Mathf.Pow(agent.speed * 0.1f, 2))
         {
             agent.isStopped = true;
+        }
+
+        // If following a unit, keep updating the destination to move to
+        if (followUnit)
+        {
+            // If the unit to follow should be attacked, stop moving and attack.
+            if ((followUnit.transform.position - transform.position).sqrMagnitude <= attackRange * attackRange)
+            {
+                agent.isStopped = true;
+                if (attacking && atkTmr >= attackRate)
+                {
+                    atkTmr = 0f;
+                    atkDurTmr = 0f;
+                    followUnit.TakeDamage(attackDmg);
+                }
+            }
+            else if (atkDurTmr >= attackDuration)
+            {
+                agent.isStopped = false;
+                agent.destination = followUnit.transform.position;
+            }
         }
     }
 
@@ -114,7 +143,6 @@ public class Unit : MonoBehaviour
         if (selectIcon)
             selectIcon.SetActive(showSelection);
     }
-
     
     public void SetHostility(Hostility hostility)
     {
@@ -139,7 +167,9 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(float dmg)
     {
-        hp = Mathf.Clamp(dmg, 0, maxHP);
+        if (immune) return;
+
+        hp = Mathf.Clamp(hp - dmg, 0, maxHP);
         if (hp <= 0)
         {
             OnKilled?.Invoke(this);
@@ -149,17 +179,26 @@ public class Unit : MonoBehaviour
     }
     public void Heal(float healAmt)
     {
-        hp = Mathf.Clamp(healAmt, 0, maxHP);
+        hp = Mathf.Clamp(hp + healAmt, 0, maxHP);
     }
 
     public void MoveTo(Vector3 destination)
     {
+        followUnit = null;
         stopTmr = 0f;
         agent.isStopped = false;
         agent.destination = destination;
     }
+
+    /// <summary>
+    /// Sets this unit to follow another unit indefinitely.
+    /// If the unit's hostility does not match this one, it will attack it.
+    /// </summary>
+    /// <param name="other">The unit to follow or attack.</param>
     public void Follow(Unit other)
     {
+        followUnit = other;
+        attacking = other.hostility != hostility && !other.immune;
         stopTmr = 0f;
     }
 
