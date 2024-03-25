@@ -17,7 +17,6 @@ public class Unit : MonoBehaviour
     // Event handlers
     public delegate void KilledHandler(Unit destroyedUnit);
     public event KilledHandler OnKilled;
-
     public delegate void SelectedHandler(Unit selectedUnit);
     public event SelectedHandler OnSelected;
     public delegate void DeselectedHandler(Unit deselectedUnit);
@@ -27,9 +26,12 @@ public class Unit : MonoBehaviour
     public float maxHP = 0f;
     [Tooltip("If this unit is immune to damage. If Max HP was set to 0, this does not matter.")]
     public bool immune = false;
-
     [Tooltip("Hostility of this unit.")]
     public Hostility hostility = Hostility.Friendly;
+
+    public float attackDmg = 0;
+    public float attackRange = 0;
+    public float attackRate = 0.15f;
 
     public GameObject selectionPrefab;
     GameObject selectIcon;
@@ -40,7 +42,6 @@ public class Unit : MonoBehaviour
     float stopCD = 0.2f;
     float stopTmr = 0;
 
-    public BiomassBank biomassBank;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +68,9 @@ public class Unit : MonoBehaviour
                 selectIcon.SetActive(false);
                 selectIcon.name = $"{gameObject.name} Selection Icon";
                 selectIcon.transform.parent = transform;
+                Vector3 extents = GetComponent<MeshRenderer>().localBounds.extents;
+                float maxExtent = Mathf.Max(Mathf.Max(extents.x, extents.y), extents.z);
+                selectIcon.transform.localScale = new(maxExtent, maxExtent, maxExtent);
                 SetHostility(hostility);
             }
         }
@@ -169,6 +173,6 @@ public class Unit : MonoBehaviour
     }
     public void CollectBiomass(int amount) 
     {
-        biomassBank.AddBiomass(amount); 
+        GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>().AddBiomass(amount); 
     }
 }
