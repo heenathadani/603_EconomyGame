@@ -54,9 +54,6 @@ public class PauseMenu : MonoBehaviour
         // You can adjust the scene index or scene name to match your main menu
         SceneManager.LoadScene("UIScene");
     }
-    private void OnDisable()
-    {
-        Cursor.visible = false;
-    }
+
 }
 

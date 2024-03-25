@@ -5,10 +5,23 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float cameraSpeed = 10f;
-    public float groundHeight = 50f;
-    public Vector3 orientation = new(60, 45, 0);
+    [SerializeField]
+    private float cameraSpeed = 10f;
+    [SerializeField]
+    private float boarderSize = 5f;
+    [SerializeField]
+    private float groundHeight = 50f;
+    [SerializeField]
+    private Vector3 orientation = new(60, 45, 0);
 
+    private void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+    private void OnDisable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -23,13 +36,13 @@ public class CameraController : MonoBehaviour
         pos.y = groundHeight;
 
         // handle input
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= 1)
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= boarderSize)
             inputDir.x = -1;
-        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - 1)
+        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - boarderSize)
             inputDir.x = 1;
-        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= 1)
+        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= boarderSize)
             inputDir.z = -1;
-        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - 1)
+        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - boarderSize)
             inputDir.z = 1;
 
         // Handle camera height from ground

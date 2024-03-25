@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Base Level.unity
     guid: 15d6556fba50c604daf62ddc72eac206
+  - enabled: 1
+    path: Assets/Jared/Test Scenes/FailScene.unity
+    guid: 86b76239b97497749b2a72b975382c24
+  - enabled: 1
+    path: Assets/Jared/Test Scenes/WinScene.unity
+    guid: 344f302072eedc04cbbebd575404f86c
   m_configObjects: {}
