@@ -547,6 +547,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7258827780630962845, guid: 88629c9dfe0cf7247b9c3ddd850be002, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8085820746172435017, guid: 88629c9dfe0cf7247b9c3ddd850be002, type: 3}
       propertyPath: m_Name
       value: UISelectionCanvas
@@ -773,7 +777,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: a02bb1a6995f9bf418dac122e44116ab, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 64ccefdd8c98ca54f80dc33bedfe8312, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &626279630
 Transform:

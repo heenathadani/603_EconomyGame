@@ -9,17 +9,20 @@ public abstract class UnitAbility : MonoBehaviour
     public float cooldown = 0f;
     public string abilityName = "Ability";
     public string description = "Ability Description";
-    public Texture2D image;
+    public Sprite sprite;
 
     const string defaultImgPath = "Assets/Art/Sprites/Ability_Default.png";
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!image)
+        if (!sprite)
         {
-            image = new Texture2D(128, 128);
-            image.LoadImage(File.ReadAllBytes(defaultImgPath));
+            Texture2D imgTex = new Texture2D(128, 128);
+            if (imgTex.LoadImage(File.ReadAllBytes(defaultImgPath)))
+            {
+                sprite = Sprite.Create(imgTex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
+            }
         }
     }
 

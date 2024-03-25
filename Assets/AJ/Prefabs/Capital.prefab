@@ -15,8 +15,7 @@ GameObject:
   - component: {fileID: 7370124465210055315}
   - component: {fileID: 6257507493614654332}
   - component: {fileID: 3603241339125541612}
-  - component: {fileID: 9041132361462529496}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Capital
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,24 +163,8 @@ MonoBehaviour:
   cost: 50
   cooldown: 0
   abilityName: Spawn Virospore
-  description: Ability Description
+  description: Spawns a virospore. These are your basic worker units, used to collect
+    Biomass or mutate into new structures.
   image: {fileID: 0}
   biomassBank: {fileID: 0}
   unitWorkerPrefab: {fileID: 1987138117285429574, guid: 466ac42748f68504c997baf6f28d17fb, type: 3}
---- !u!114 &9041132361462529496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6159348304156585970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09a65e1514a227a488a894db106acc1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 0
-  cooldown: 0
-  abilityName: Set Rally Point
-  description: Sets the point at which spawned units will move to once complete.
-  image: {fileID: 0}

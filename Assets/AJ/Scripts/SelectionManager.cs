@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class SelectionManager : MonoBehaviour
 {
+    public delegate void SelectionEventHandler(List<Unit> units);
+    public static event SelectionEventHandler OnUnitsSelected;
+
     public RectTransform selectBox;
     [Tooltip("The tendency of selected units to retain their formation when moving between destinations. " +
         "A lower values means a closer move destination to the group at which point they will break formation in order to get to said point.")]
@@ -82,6 +85,9 @@ public class SelectionManager : MonoBehaviour
 
                 foreach (Unit u in selected)
                     u.Select();
+
+                // Notify selection listeners
+                OnUnitsSelected?.Invoke(selected);
             }
 
             selectBox.gameObject.SetActive(false);
