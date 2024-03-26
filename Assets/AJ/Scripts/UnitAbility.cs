@@ -5,6 +5,9 @@ using UnityEngine;
 
 public abstract class UnitAbility : MonoBehaviour
 {
+    public delegate void AbilityExecutedHandler();
+    public event AbilityExecutedHandler OnAbilityExecuted;
+
     public int cost = 0;
     public float cooldown = 0f;
     public string abilityName = "Ability";
@@ -38,9 +41,12 @@ public abstract class UnitAbility : MonoBehaviour
 
     /// <summary>
     /// Called when the player clicks on the corresponding Unit Ability button.
-    /// Override this method in your specific ability scripts.
+    /// Override this method in your specific ability scripts. BE SURE TO CALL base.Execute() AT THE END
     /// The HUDController already handles checking the ability's cost and cooldown before executing,
     /// so no need to also do it here.
     /// </summary>
-    public abstract void Execute();
+    public virtual void Execute()
+    {
+        OnAbilityExecuted?.Invoke();
+    }
 }

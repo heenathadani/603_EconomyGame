@@ -23,5 +23,7 @@ public class MorphToUnit : UnitAbility
         // replace this unit with the new unit to morph to
         Instantiate(unitToMorphTo, transform.position, transform.rotation);
         GetComponent<Unit>().TakeDamage(1000);
+
+        base.Execute();
     }
 }

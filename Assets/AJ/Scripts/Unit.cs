@@ -299,4 +299,19 @@ public class Unit : MonoBehaviour
     {
         return Vector2.Distance(transform.position, targetLocation);
     }
+
+    public UnitAbility[] GetAllAbilities()
+    {
+        return GetComponents<UnitAbility>();
+    }
+
+    public UnitAbility GetAbility(string abilityName)
+    {
+        foreach (UnitAbility a in GetComponents<UnitAbility>())
+        {
+            if (a.abilityName == abilityName)
+                return a;
+        }
+        return null;
+    }
 }
