@@ -295,15 +295,15 @@ public class Unit : MonoBehaviour
         followingCommand = commanded;
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        Biomass biomass = other.GetComponent<Biomass>();
-        if (biomass)
-        {
-            biomass.CollectResource(this);
-        }
-    }
-    public void CollectBiomass(int amount) 
+    //public void OnTriggerEnter(Collider other)
+    //{
+    //    Biomass biomass = other.GetComponent<Biomass>();
+    //    if (biomass)
+    //    {
+    //        biomass.CollectResource(this);
+    //    }
+    //}
+    public void CollectBiomass(float amount) 
     {
         GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>().AddBiomass(amount); 
     }
