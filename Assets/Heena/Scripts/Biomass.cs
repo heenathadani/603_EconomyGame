@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public class Biomass : MonoBehaviour
+public class Biomass : Unit
 {
+    public delegate void OnBeginExtractHandler();
+    public event OnBeginExtractHandler OnBeginExtract;
+
     public float biomassAmount = 100;
     public float depletionTime = 10f;// Time in seconds to deplete the biomass
     public void OnTriggerEnter(Collider other)
@@ -10,8 +13,9 @@ public class Biomass : MonoBehaviour
         Unit unit = other.GetComponent<Unit>();
         if (unit && unit.unitType == UnitType.WorkerUnit)
         {
-            unit.TakeDamage(999);
+            unit.Destroy();
             StartDepleting(unit);
+            OnBeginExtract?.Invoke();
         }
     }
     public void StartDepleting(Unit worker)
@@ -44,7 +48,7 @@ public class Biomass : MonoBehaviour
             CollectBiomass(amount);
             yield return new WaitForSeconds(1); // Wait for 1 second
         }
-        Destroy(gameObject);
+        Destroy();
     }
     public void CollectBiomass(float amount)
     {

@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 6276634817902063018}
   - component: {fileID: 5973063069473138491}
   - component: {fileID: 567073850731439859}
-  m_Layer: 0
+  - component: {fileID: 4105531414648031801}
+  m_Layer: 7
   m_Name: Basic Resource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +122,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35907f2998eaae42a6d71f81df48d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 0
+  immune: 1
+  hostility: 1
+  unitType: 0
+  unitName: Biomass Pocket
+  attackDmg: 0
+  attackRange: 0
+  attackDuration: 0.25
+  attackRate: 0.15
+  detectionRange: 0
+  selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
+  currentHP: 0
+  unitState: 0
   biomassAmount: 100
+  depletionTime: 10
 --- !u!54 &567073850731439859
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -149,3 +164,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!195 &4105531414648031801
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2649727940541675198}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
