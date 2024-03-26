@@ -30,6 +30,13 @@ public class SelectionManager : MonoBehaviour
         allOtherUnits = new();
         cam = GetComponent<Camera>();
     }
+    private void OnDestroy()
+    {
+        allFriendlyUnits.Clear();
+        allOtherUnits.Clear();
+        OnUnitsSelected = null;
+        
+    }
 
     // Start is called before the first frame update
     void Start()

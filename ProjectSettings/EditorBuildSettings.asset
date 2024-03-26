@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Heena/Test Scenes/UI.unity
     guid: 1b7f8acd1bcc1cc40a431b726b9d3e1e
   - enabled: 1
-    path: Assets/Jared/Test Scenes/Playtest 1/TimerTest.unity
+    path: Assets/Jared/Test Scenes/Playtest 1/Playtest Level 1.unity
     guid: 8652f368bc2a0f3498885af75770f77a
+  - enabled: 1
+    path: Assets/Jared/Test Scenes/Playtest 1/Playtest Level 2.unity
+    guid: 0f3a1110c4d58e141b5a9766ac44f571
   - enabled: 1
     path: Assets/Jared/Test Scenes/GameComplete.unity
     guid: 3f686867d4d248849baa234bfcecf9f5
