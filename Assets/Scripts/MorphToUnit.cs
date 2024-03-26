@@ -21,9 +21,7 @@ public class MorphToUnit : UnitAbility
     public override void Execute()
     {
         // replace this unit with the new unit to morph to
-        GameObject morphedUnit = Instantiate(unitToMorphTo, transform);
-
-        // destroy the original unit
-        Destroy(gameObject);
+        Instantiate(unitToMorphTo, transform.position, transform.rotation);
+        GetComponent<Unit>().TakeDamage(1000);
     }
 }

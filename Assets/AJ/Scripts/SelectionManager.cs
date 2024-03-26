@@ -6,7 +6,7 @@ using UnityEngine;
 public class SelectionManager : MonoBehaviour
 {
     public delegate void SelectionEventHandler(List<Unit> units);
-    public static event SelectionEventHandler OnUnitsSelected;
+    public static event SelectionEventHandler OnUnitSelectionChanged;
 
     public RectTransform selectBox;
     [Tooltip("The tendency of selected units to retain their formation when moving between destinations. " +
@@ -34,8 +34,7 @@ public class SelectionManager : MonoBehaviour
     {
         allFriendlyUnits.Clear();
         allOtherUnits.Clear();
-        OnUnitsSelected = null;
-        
+        OnUnitSelectionChanged = null;
     }
 
     // Start is called before the first frame update
@@ -66,7 +65,9 @@ public class SelectionManager : MonoBehaviour
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
             List<Unit> newPending = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
             foreach (Unit u in pending)
-                u.SetShowSelection(false);
+            {
+                if (u) u.SetShowSelection(false);
+            }
             pending = newPending;
             foreach (Unit u in pending)
                 u.SetShowSelection(true);
@@ -84,24 +85,35 @@ public class SelectionManager : MonoBehaviour
 
             if (newSelected.Count > 0)
             {
+                // Deselect all old units
                 foreach (Unit u in selected)
-                    u.Deselect();
+                {
+                    if (u)
+                    {
+                        u.Deselect();
+                        u.OnKilled -= RemoveFromSelection;
+                    }
+                }
 
                 selected = new(newSelected);
                 newSelected.Clear();
 
+                // Select the new units
                 foreach (Unit u in selected)
+                {
                     u.Select();
+                    u.OnKilled += RemoveFromSelection;
+                }
 
                 // Notify selection listeners
-                OnUnitsSelected?.Invoke(selected);
+                OnUnitSelectionChanged?.Invoke(selected);
             }
 
             selectBox.gameObject.SetActive(false);
         }
 
         // Handle moving units
-        if (Input.GetMouseButtonDown(1) && selected[0].hostility == Hostility.Friendly)
+        if (Input.GetMouseButtonDown(1) && selected.Count > 0 && selected[0].hostility == Hostility.Friendly)
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = cam.nearClipPlane;
@@ -158,5 +170,14 @@ public class SelectionManager : MonoBehaviour
             }
         }
         return selectedUnits;
+    }
+
+    public void RemoveFromSelection(Unit u)
+    {
+        if (selected.Remove(u))
+        {
+            // Once again notify selection listeners
+            OnUnitSelectionChanged?.Invoke(selected);
+        }
     }
 }

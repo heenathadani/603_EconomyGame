@@ -196,7 +196,7 @@ public class Unit : MonoBehaviour
             }
             OnKilled?.Invoke(this);
             // Destroy after a delay
-            Destroy(gameObject, 1f);
+            Destroy(gameObject);
         }
     }
     public void Heal(float healAmt)

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5089937427609401092}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraSpeed: 30
+  boarderSize: 5
   groundHeight: 50
   orientation: {x: 60, y: 45, z: 0}
 --- !u!114 &5089937427609401092
@@ -112,3 +113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d03481c643409c4d85029f870a67d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectBox: {fileID: 0}
+  formationRetainment: 0.5
+  biomassBank: {fileID: 0}

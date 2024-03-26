@@ -17,7 +17,7 @@ public class HUDController : MonoBehaviour
     void Start()
     {
         abilityButtons = new(abilitiesBoard.GetComponentsInChildren<Button>(true));
-        SelectionManager.OnUnitsSelected += OnUnitsSelected;
+        SelectionManager.OnUnitSelectionChanged += OnUnitsSelected;
     }
 
     // Update is called once per frame
@@ -62,7 +62,9 @@ public class HUDController : MonoBehaviour
                         }
                     });
                     abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
-                    abilityButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = a.abilityName;
+                    TextMeshProUGUI[] texts = abilityButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                    texts[0].text = a.abilityName;
+                    texts[1].text = $"{a.cost} Biomass";
                     abilityButtons[i].gameObject.SetActive(true);
                 }
                 else
