@@ -6,7 +6,7 @@ using UnityEngine;
 public class SelectionManager : MonoBehaviour
 {
     public delegate void SelectionEventHandler(List<Unit> units);
-    public static event SelectionEventHandler OnUnitsSelected;
+    public static event SelectionEventHandler OnUnitSelectionChanged;
 
     public RectTransform selectBox;
     [Tooltip("The tendency of selected units to retain their formation when moving between destinations. " +
@@ -16,11 +16,14 @@ public class SelectionManager : MonoBehaviour
     List<Unit> newSelected, selected, pending;
 
     // Sets automatically handle dupes
-    public static HashSet<Unit> allFriendlyUnits, allOtherUnits;
+    public static Dictionary<UnitType, HashSet<Unit>> allFriendlyUnits, allOtherUnits;
 
     Vector2 mouseStart;
     Camera cam;
     public BiomassBank biomassBank;
+
+    int unitMask = (1 << 6) | (1 << 7) | (1 << 8);
+
     private void Awake()
     {
         newSelected = new();
@@ -34,8 +37,7 @@ public class SelectionManager : MonoBehaviour
     {
         allFriendlyUnits.Clear();
         allOtherUnits.Clear();
-        OnUnitsSelected = null;
-        
+        OnUnitSelectionChanged = null;
     }
 
     // Start is called before the first frame update
@@ -66,7 +68,9 @@ public class SelectionManager : MonoBehaviour
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
             List<Unit> newPending = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
             foreach (Unit u in pending)
-                u.SetShowSelection(false);
+            {
+                if (u) u.SetShowSelection(false);
+            }
             pending = newPending;
             foreach (Unit u in pending)
                 u.SetShowSelection(true);
@@ -84,39 +88,50 @@ public class SelectionManager : MonoBehaviour
 
             if (newSelected.Count > 0)
             {
+                // Deselect all old units
                 foreach (Unit u in selected)
-                    u.Deselect();
+                {
+                    if (u)
+                    {
+                        u.Deselect();
+                        u.OnKilled -= RemoveFromSelection;
+                    }
+                }
 
                 selected = new(newSelected);
                 newSelected.Clear();
 
+                // Select the new units
                 foreach (Unit u in selected)
+                {
                     u.Select();
+                    u.OnKilled += RemoveFromSelection;
+                }
 
                 // Notify selection listeners
-                OnUnitsSelected?.Invoke(selected);
+                OnUnitSelectionChanged?.Invoke(selected);
             }
 
             selectBox.gameObject.SetActive(false);
         }
 
         // Handle moving units
-        if (Input.GetMouseButtonDown(1) && selected[0].hostility == Hostility.Friendly)
+        if (Input.GetMouseButtonDown(1) && selected.Count > 0 && selected[0].hostility == Hostility.Friendly)
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = cam.nearClipPlane;
             // Raycast against the environment or other units
-            if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, (1 << 0) | (1 << 3)))
+            if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, (1 << 0) | unitMask))
             {
                 if (hit.collider.TryGetComponent(out Unit target))
                 {
                     foreach (Unit u in selected)
-                        u.Follow(target);
+                        u.Follow(target, true);
                 }
                 else
                 {
                     foreach (Unit u in selected)
-                        u.MoveTo(hit.point);
+                        u.MoveTo(hit.point, true);
                 }
             }
         }
@@ -129,14 +144,14 @@ public class SelectionManager : MonoBehaviour
     /// <param name="selectedList">The list to append units inside the selection box to</param>
     /// <param name="bounds">The selection box bounds</param>
     /// <param name="oneUnitOnly">If true, only populates the selected list with the first unit that lies in the selection box.</param>
-    List<Unit> GetUnitsInSelectionBox(HashSet<Unit> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
+    List<Unit> GetUnitsInSelectionBox(Dictionary<UnitType, HashSet<Unit>> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
     {
         List<Unit> selectedUnits = new();
 
         // For a single click and no drag, raycast against Unit layer
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = cam.nearClipPlane;
-        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, 1 << 3))
+        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, unitMask))
         {
             selectedUnits.Add(hit.collider.GetComponent<Unit>());
             if (oneUnitOnly)
@@ -144,16 +159,28 @@ public class SelectionManager : MonoBehaviour
         }
 
         // Simple AABB test to see if the unit's inside the selection box
-        foreach (Unit u in unitsToCheck)
+        foreach (var pair in unitsToCheck)
         {
-            Vector2 unitPos = cam.WorldToScreenPoint(u.transform.position);
-            if (unitPos.x > bounds.min.x && unitPos.x < bounds.max.x && unitPos.y > bounds.min.y && unitPos.y < bounds.max.y)
+            foreach (Unit u in pair.Value)
             {
-                selectedUnits.Add(u);
-                u.Select();
-                if (oneUnitOnly) break;
+                Vector2 unitPos = cam.WorldToScreenPoint(u.transform.position);
+                if (unitPos.x > bounds.min.x && unitPos.x < bounds.max.x && unitPos.y > bounds.min.y && unitPos.y < bounds.max.y)
+                {
+                    selectedUnits.Add(u);
+                    u.Select();
+                    if (oneUnitOnly) break;
+                }
             }
         }
         return selectedUnits;
+    }
+
+    public void RemoveFromSelection(Unit u)
+    {
+        if (selected.Remove(u))
+        {
+            // Once again notify selection listeners
+            OnUnitSelectionChanged?.Invoke(selected);
+        }
     }
 }

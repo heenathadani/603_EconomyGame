@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,17 +11,26 @@ public enum Hostility
     Neutral,
     Hostile
 }
+public enum UnitState
+{
+    Idle,
+    Moving
+}
 
 [RequireComponent(typeof(Collider), typeof(NavMeshAgent))]
 public class Unit : MonoBehaviour
 {
     // Event handlers
+    public delegate void DamageTakenHandler();
+    public event DamageTakenHandler OnDamageTaken;
     public delegate void KilledHandler(Unit destroyedUnit);
     public event KilledHandler OnKilled;
     public delegate void SelectedHandler(Unit selectedUnit);
     public event SelectedHandler OnSelected;
     public delegate void DeselectedHandler(Unit deselectedUnit);
     public event DeselectedHandler OnDeselected;
+    public delegate void OnIdleTargetLostHandler();
+    public event OnIdleTargetLostHandler OnIdleTargetLost;
 
     [Tooltip("The maximum HP of this unit. Set to 0 if indestructible.")]
     public float maxHP = 0f;
@@ -28,6 +38,9 @@ public class Unit : MonoBehaviour
     public bool immune = false;
     [Tooltip("Hostility of this unit.")]
     public Hostility hostility = Hostility.Friendly;
+    [Tooltip("The type of this unit")]
+    public UnitType unitType = UnitType.None;
+    public string unitName = "";
 
     public float attackDmg = 0;
     public float attackRange = 0;
@@ -36,58 +49,75 @@ public class Unit : MonoBehaviour
     float atkDurTmr = 0f;
     public float attackRate = 0.15f;
     float atkTmr = 0f;
+    [Tooltip("The range at which this unit will attempt to automatically attack an enemy without the player explicitely commanding it.")]
+    public float detectionRange = 0f;
 
     public GameObject selectionPrefab;
     GameObject selectIcon;
     NavMeshAgent agent;
 
-    [SerializeField] float hp;
+    [HideInInspector]
+    public float currentHP;
+    [HideInInspector]
+    public UnitState unitState = UnitState.Idle;
     bool selected = false;
     float stopCD = 0.2f;
     float stopTmr = 0;
     bool attacking = false;
-    [SerializeField] protected Unit followUnit;
+    protected Unit followUnit;
+    bool followingCommand = false;
 
-    [SerializeField] protected UnitManager unitManager;
+    // This stores the unit's position prior to attempting to attack a hostile w/o being commanded.
+    // The unit returns to this position when the hostile is no longer within its detection radius.
+    Vector3 idlePosition;
+
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        unitManager = GameObject.FindWithTag("UnitManager").GetComponent<UnitManager>();
-        unitManager.UpdatePlayerUnitsList();
+        name = unitName.Equals("") ? GameUtilities.GetDisplayed(unitType) : unitName;
 
         // Add this unit to the list ofselectable units
         switch (hostility)
         {
             case Hostility.Friendly:
-                SelectionManager.allFriendlyUnits.Add(this);
+                if (!SelectionManager.allFriendlyUnits.ContainsKey(unitType))
+                    SelectionManager.allFriendlyUnits[unitType] = new HashSet<Unit>();
+                SelectionManager.allFriendlyUnits[unitType].Add(this);
                 break;
             default:
-                SelectionManager.allOtherUnits.Add(this);
+                if (!SelectionManager.allOtherUnits.ContainsKey(unitType))
+                    SelectionManager.allOtherUnits[unitType] = new HashSet<Unit>();
+                SelectionManager.allOtherUnits[unitType].Add(this);
                 break;
         }
 
-        hp = maxHP;
-        if (hp == 0f) immune = true;
+        currentHP = maxHP;
+        if (currentHP == 0f) immune = true;
         agent = GetComponent<NavMeshAgent>();
+        idlePosition = transform.position;
 
-        if (selectionPrefab)
+        Vector3 rayStart = transform.position;
+        rayStart.y += 100f;
+        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, 500f, 1 << 0))
         {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit))
+            transform.position = hit.point;
+            if (selectionPrefab)
             {
-                selectIcon = Instantiate(selectionPrefab, hit.point + new Vector3(0, 0.01f, 0), Quaternion.Euler(90, 0, 0));
+                Vector3 extents = GetComponent<MeshRenderer>().localBounds.extents;
+                selectIcon = Instantiate(selectionPrefab, transform.position - new Vector3(0, extents.y, 0), Quaternion.Euler(90, 0, 0));
                 selectIcon.SetActive(false);
                 selectIcon.name = $"{gameObject.name} Selection Icon";
                 selectIcon.transform.parent = transform;
-                Vector3 extents = GetComponent<MeshRenderer>().localBounds.extents;
+
                 float maxExtent = Mathf.Max(Mathf.Max(extents.x, extents.y), extents.z);
                 selectIcon.transform.localScale = new(maxExtent, maxExtent, maxExtent);
                 SetHostility(hostility);
             }
-        }
-        else
-        {
-            Debug.LogWarning($"The Unit {gameObject.name} does not have a Selection Icon prefab set on its Unit component!");
+            else
+            {
+                Debug.LogWarning($"The Unit {gameObject.name} does not have a Selection Icon prefab set on its Unit component!");
+            }
         }
     }
 
@@ -101,6 +131,39 @@ public class Unit : MonoBehaviour
         if (stopTmr >= stopCD && agent.velocity.sqrMagnitude <= Mathf.Pow(agent.speed * 0.1f, 2))
         {
             agent.isStopped = true;
+            followingCommand = false;
+        }
+
+        // Update the idle position to return to when no longer attacking a foe w/o being commanded
+        if (unitState == UnitState.Idle || followingCommand)
+            idlePosition = transform.position;
+
+        if (!followingCommand)
+        {
+            // overlap against all enemies in range (Layer 8) or
+            // all friendlies in range (Layer 6), depending on hostility
+            Collider[] inRange = Physics.OverlapSphere(transform.position, detectionRange, hostility == Hostility.Friendly ? 1 << 8 : 1 << 6);
+            if (inRange.Length > 0)
+            {
+                // Find the nearest unit and go after them
+                Unit closest = inRange[0].GetComponent<Unit>();
+                float nearest = (closest.transform.position - transform.position).sqrMagnitude;
+                foreach (Collider c in inRange)
+                {
+                    float dist2 = (c.transform.position - transform.position).sqrMagnitude;
+                    if (dist2 < nearest)
+                    {
+                        nearest = dist2;
+                        closest = c.GetComponent<Unit>();
+                    }
+                }
+                Follow(closest);
+            }
+            else
+            {
+                MoveTo(idlePosition);
+                OnIdleTargetLost?.Invoke();
+            }
         }
 
         // If following a unit, keep updating the destination to move to
@@ -174,26 +237,43 @@ public class Unit : MonoBehaviour
     {
         if (immune) return;
 
-        hp = Mathf.Clamp(hp - dmg, 0, maxHP);
-        if (hp <= 0)
+        currentHP = Mathf.Clamp(currentHP - dmg, 0, maxHP);
+        if (currentHP <= 0)
         {
+            if (hostility == Hostility.Friendly)
+            {
+                SelectionManager.allFriendlyUnits[unitType].Remove(this);
+                if (SelectionManager.allFriendlyUnits[unitType].Count == 0)
+                    SelectionManager.allFriendlyUnits.Remove(unitType);
+            }
+            else
+            {
+                SelectionManager.allOtherUnits[unitType].Remove(this);
+                if (SelectionManager.allOtherUnits[unitType].Count == 0)
+                    SelectionManager.allOtherUnits.Remove(unitType);
+            }
             OnKilled?.Invoke(this);
-            // Destroy after a delay
-            Destroy(gameObject, 1f); 
-            unitManager.UpdatePlayerUnitsList();
+            // Destroy
+            Destroy(gameObject);
+        }
+        else
+        {
+            OnDamageTaken?.Invoke();
         }
     }
     public void Heal(float healAmt)
     {
-        hp = Mathf.Clamp(hp + healAmt, 0, maxHP);
+        currentHP = Mathf.Clamp(currentHP + healAmt, 0, maxHP);
     }
 
-    public void MoveTo(Vector3 destination)
+    public void MoveTo(Vector3 destination, bool commanded = false)
     {
+        unitState = UnitState.Moving;
         followUnit = null;
         stopTmr = 0f;
         agent.isStopped = false;
         agent.destination = destination;
+        followingCommand = commanded;
     }
 
     /// <summary>
@@ -201,11 +281,18 @@ public class Unit : MonoBehaviour
     /// If the unit's hostility does not match this one, it will attack it.
     /// </summary>
     /// <param name="other">The unit to follow or attack.</param>
-    public void Follow(Unit other)
+    public void Follow(Unit other, bool commanded = false)
     {
         followUnit = other;
+        if (!other)
+        {
+            followingCommand = false;
+            return;
+        }
+        unitState = UnitState.Moving;
         attacking = other.hostility != hostility && !other.immune;
         stopTmr = 0f;
+        followingCommand = commanded;
     }
 
     public void OnTriggerEnter(Collider other)

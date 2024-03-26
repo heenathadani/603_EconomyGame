@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7403166609139331462}
   - component: {fileID: 1429068847771360989}
   - component: {fileID: 395449372393360516}
-  - component: {fileID: 1194724251322348432}
-  m_Layer: 3
+  - component: {fileID: 5829815514723876148}
+  m_Layer: 6
   m_Name: MeleeFighter_Friendly
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &8034209038682219119
 MeshRenderer:
@@ -118,7 +118,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5000001
-  m_Speed: 3.5
+  m_Speed: 4.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -130,7 +130,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1194724251322348432
+--- !u!114 &5829815514723876148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,14 +139,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 7836227749016348371}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c86df7aaff2bbc4e8e344df3b95702b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9bda28730f9e631468c2ff702f92899b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 100
   immune: 0
   hostility: 0
-  attackDmg: 25
+  unitType: 4
+  unitName: Melee Combat Spore
+  attackDmg: 15
   attackRange: 3
-  attackDuration: 0.25
+  attackDuration: 0.5
   attackRate: 0.75
+  detectionRange: 20
   selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
+  currentHP: 0
+  unitState: 0

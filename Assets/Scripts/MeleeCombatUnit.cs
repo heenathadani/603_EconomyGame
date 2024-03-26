@@ -10,10 +10,8 @@ public class MeleeCombatUnit : Unit
         Idle,
     }
 
-    [SerializeField] private EnemyManager enemyManager;
     public float visionRange;
 
-    private GameObject targetUnit;
     private float nearestUnitDistance;
 
     private State currentState;
@@ -21,14 +19,8 @@ public class MeleeCombatUnit : Unit
 
     protected override void Start()
     {
-        hostility = Hostility.Friendly;
-        currentState = State.TrackingEnemy;
-
-        //Get Proper references to units
-        enemyManager = GameObject.FindWithTag("EnemyManager").GetComponent<EnemyManager>();
-
-
         base.Start();
+        currentState = State.TrackingEnemy;
 
         InvokeRepeating("FindNearestEnemy", 0, 0.5f);
     }
@@ -41,9 +33,9 @@ public class MeleeCombatUnit : Unit
                 followUnit = null;
                 break;
             case State.TrackingEnemy:
-                if (targetUnit)
+                if (followUnit)
                 {
-                    Follow(targetUnit.GetComponent<Unit>());
+                    Follow(followUnit);
                 }
                 break;
             default:
@@ -54,31 +46,32 @@ public class MeleeCombatUnit : Unit
 
     private void FindNearestEnemy()
     {
-        enemyManager.UpdateEnemyUnitsList();
         bool targetsFoundInRange = false;
-        foreach (GameObject g in enemyManager.enemyUnits)
+        foreach (var pair in SelectionManager.allOtherUnits)
         {
-
-            float tempDistance = FindDistance(g.transform.position);
-            if (tempDistance <= visionRange)
+            foreach (Unit u in pair.Value)
             {
-                targetsFoundInRange = true;
-                if (State.TrackingEnemy == currentState)
+                if (u.hostility == Hostility.Hostile)
                 {
-                    if (targetUnit)
+                    float tempDistance = FindDistance(u.transform.position);
+                    if (tempDistance <= visionRange)
                     {
-                        if (tempDistance < FindDistance(targetUnit.transform.position))
+                        targetsFoundInRange = true;
+                        if (State.TrackingEnemy == currentState)
                         {
-                            targetUnit = g;
-                            followUnit = targetUnit.GetComponent<Unit>();
+                            if (followUnit)
+                            {
+                                if (tempDistance < FindDistance(u.transform.position))
+                                {
+                                    followUnit = u;
+                                }
+                            }
+                            else
+                            {
+                                followUnit = u;
+                            }
                         }
                     }
-                    else
-                    {
-                        targetUnit = g;
-                        followUnit = targetUnit.GetComponent<Unit>();
-                    }
-
                 }
             }
         }

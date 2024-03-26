@@ -873,7 +873,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4774999803266818959, guid: f1f7246accd024a4392cc893e2b700db, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21
+      value: -28.17
       objectReference: {fileID: 0}
     - target: {fileID: 4774999803266818959, guid: f1f7246accd024a4392cc893e2b700db, type: 3}
       propertyPath: m_LocalPosition.y
@@ -881,7 +881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4774999803266818959, guid: f1f7246accd024a4392cc893e2b700db, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -31.63
+      value: -34.3
       objectReference: {fileID: 0}
     - target: {fileID: 4774999803266818959, guid: f1f7246accd024a4392cc893e2b700db, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1340,6 +1340,10 @@ PrefabInstance:
     - target: {fileID: 5028514164486557670, guid: be703b70a5af93944ab132c079c3671f, type: 3}
       propertyPath: m_Name
       value: In-Game UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059653632676993035, guid: be703b70a5af93944ab132c079c3671f, type: 3}
+      propertyPath: biomass
+      value: 10000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

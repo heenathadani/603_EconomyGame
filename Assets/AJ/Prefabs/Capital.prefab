@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 7370124465210055315}
   - component: {fileID: 6257507493614654332}
   - component: {fileID: 3603241339125541612}
-  m_Layer: 3
+  - component: {fileID: 6664485350281790333}
+  m_Layer: 6
   m_Name: Capital
   m_TagString: CapitalUnit
   m_Icon: {fileID: 0}
@@ -119,7 +120,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5000001
-  m_Speed: 1
+  m_Speed: 1.5
   m_Acceleration: 50
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -146,11 +147,16 @@ MonoBehaviour:
   maxHP: 500
   immune: 0
   hostility: 0
+  unitType: 1
+  unitName: Capital
   attackDmg: 0
   attackRange: 0
   attackDuration: 0.25
   attackRate: 0.15
+  detectionRange: 0
   selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
+  currentHP: 0
+  commandState: 1
 --- !u!114 &3603241339125541612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,9 +171,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost: 50
   cooldown: 0
-  abilityName: Spawn Virospore
-  description: Spawns a virospore. These are your basic worker units, used to collect
-    Biomass or mutate into new structures.
+  abilityName: Spawn Worker Spore
+  description: Worker Spores are your basic worker units, used to collect Biomass
+    or mutate into new structures.
+  requiredUnit: 0
   abilitySprite: {fileID: 0}
   timer: 0
-  unitWorkerPrefab: {fileID: 1987138117285429574, guid: 466ac42748f68504c997baf6f28d17fb, type: 3}
+  unitPrefab: {fileID: 1987138117285429574, guid: 466ac42748f68504c997baf6f28d17fb, type: 3}
+--- !u!114 &6664485350281790333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6159348304156585970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2efa6b06017c487418281bd4ba16c560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 100
+  cooldown: 0
+  abilityName: Spawn Melee Spore
+  description: Melee Spores are the basic combat unit type. These help defend your
+    Capital.
+  requiredUnit: 2
+  abilitySprite: {fileID: 0}
+  timer: 0
+  unitPrefab: {fileID: 7836227749016348371, guid: f1f7246accd024a4392cc893e2b700db, type: 3}

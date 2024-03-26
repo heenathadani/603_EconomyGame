@@ -13,12 +13,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Unit
+  - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - FriendlyUnit
+  - NeutralUnit
+  - EnemyUnit
   - 
   - 
   - 
