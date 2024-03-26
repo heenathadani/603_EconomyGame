@@ -41,16 +41,21 @@ public class Unit : MonoBehaviour
     GameObject selectIcon;
     NavMeshAgent agent;
 
-    float hp;
+    [SerializeField] float hp;
     bool selected = false;
     float stopCD = 0.2f;
     float stopTmr = 0;
     bool attacking = false;
-    Unit followUnit;
+    [SerializeField] protected Unit followUnit;
+
+    [SerializeField] protected UnitManager unitManager;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
+        unitManager = GameObject.FindWithTag("UnitManager").GetComponent<UnitManager>();
+        unitManager.UpdatePlayerUnitsList();
+
         // Add this unit to the list ofselectable units
         switch (hostility)
         {
@@ -87,7 +92,7 @@ public class Unit : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         stopTmr += Time.deltaTime;
         atkTmr += Time.deltaTime;
@@ -174,7 +179,8 @@ public class Unit : MonoBehaviour
         {
             OnKilled?.Invoke(this);
             // Destroy after a delay
-            Destroy(gameObject, 1f);
+            Destroy(gameObject, 1f); 
+            unitManager.UpdatePlayerUnitsList();
         }
     }
     public void Heal(float healAmt)
@@ -213,5 +219,10 @@ public class Unit : MonoBehaviour
     public void CollectBiomass(int amount) 
     {
         GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>().AddBiomass(amount); 
+    }
+
+    protected float FindDistance(Vector2 targetLocation)
+    {
+        return Vector2.Distance(transform.position, targetLocation);
     }
 }

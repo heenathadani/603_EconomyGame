@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - BiomassBank
+  - CapitalUnit
+  - UnitManager
+  - Enemy
+  - EnemyManager
   layers:
   - Default
   - TransparentFX

@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeCombatUnit : Unit
+public class Enemy : Unit
 {
     protected enum State
     {
-        TrackingEnemy,
+        Wandering,
+        TrackingCapital,
+        TrackingUnit,
         Idle,
     }
 
-    [SerializeField] private EnemyManager enemyManager;
+    //[SerializeField] private UnitManager unitManager;
+    [SerializeField] private GameObject capitalUnit;
     public float visionRange;
 
     private GameObject targetUnit;
@@ -21,30 +24,37 @@ public class MeleeCombatUnit : Unit
 
     protected override void Start()
     {
-        hostility = Hostility.Friendly;
-        currentState = State.TrackingEnemy;
+        hostility = Hostility.Hostile;
+        currentState = State.TrackingCapital;
 
         //Get Proper references to units
-        enemyManager = GameObject.FindWithTag("EnemyManager").GetComponent<EnemyManager>();
+        //unitManager = GameObject.FindWithTag("UnitManager").GetComponent<UnitManager>();
+        capitalUnit = GameObject.FindWithTag("CapitalUnit");
 
 
         base.Start();
 
-        InvokeRepeating("FindNearestEnemy", 0, 0.5f);
+        InvokeRepeating("FindNearestUnit", 0, 0.5f);
     }
 
     protected override void Update()
-    {
+    {       
         switch (currentState)
         {
             case State.Idle:
                 followUnit = null;
                 break;
-            case State.TrackingEnemy:
+            case State.TrackingCapital:
+                if (capitalUnit)
+                {
+                    Follow(capitalUnit.GetComponent<Unit>());
+                }
+                break;
+            case State.TrackingUnit:
                 if (targetUnit)
                 {
                     Follow(targetUnit.GetComponent<Unit>());
-                }
+                }               
                 break;
             default:
                 break;
@@ -52,18 +62,24 @@ public class MeleeCombatUnit : Unit
         base.Update();
     }
 
-    private void FindNearestEnemy()
+    private void FindNearestUnit()
     {
-        enemyManager.UpdateEnemyUnitsList();
+        unitManager.UpdatePlayerUnitsList();
         bool targetsFoundInRange = false;
-        foreach (GameObject g in enemyManager.enemyUnits)
+        foreach(GameObject g in unitManager.playerUnits)
         {
 
             float tempDistance = FindDistance(g.transform.position);
-            if (tempDistance <= visionRange)
+            if(tempDistance <= visionRange)
             {
                 targetsFoundInRange = true;
-                if (State.TrackingEnemy == currentState)
+                if (State.TrackingCapital == currentState)
+                {
+                    targetUnit = g;
+                    followUnit = targetUnit.GetComponent<Unit>();
+                    currentState = State.TrackingUnit;
+                }
+                else if(State.TrackingUnit == currentState)
                 {
                     if (targetUnit)
                     {
@@ -85,8 +101,13 @@ public class MeleeCombatUnit : Unit
 
         if (!targetsFoundInRange)
         {
-            currentState = State.Idle;
-            followUnit = null;
+            currentState = State.TrackingCapital;
+            followUnit = capitalUnit.GetComponent<Unit>();
         }
     }
+
+ /*   protected float FindDistance(Vector2 targetLocation)
+    {
+        return Vector2.Distance(transform.position, targetLocation);
+    }*/
 }

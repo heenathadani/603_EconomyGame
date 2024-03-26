@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3603241339125541612}
   m_Layer: 3
   m_Name: Capital
-  m_TagString: Untagged
+  m_TagString: CapitalUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,8 +146,11 @@ MonoBehaviour:
   maxHP: 500
   immune: 0
   hostility: 0
+  attackDmg: 0
+  attackRange: 0
+  attackDuration: 0.25
+  attackRate: 0.15
   selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
-  biomassBank: {fileID: 0}
 --- !u!114 &3603241339125541612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,6 +168,6 @@ MonoBehaviour:
   abilityName: Spawn Virospore
   description: Spawns a virospore. These are your basic worker units, used to collect
     Biomass or mutate into new structures.
-  image: {fileID: 0}
-  biomassBank: {fileID: 0}
+  abilitySprite: {fileID: 0}
+  timer: 0
   unitWorkerPrefab: {fileID: 1987138117285429574, guid: 466ac42748f68504c997baf6f28d17fb, type: 3}
