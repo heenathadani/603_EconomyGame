@@ -19,11 +19,13 @@ public class SceneManagers : MonoBehaviour
     }
     public void LoadScene(int sceneIndex)
     {
+        _currentLevel = sceneIndex;
         SceneManager.LoadScene(sceneIndex);
     }
 
     public static void StaticLoad(int sceneIndex)
     {
+        _currentLevel = sceneIndex;
         // Same as Load Scene but can be done statically to avoid having to instance this object
         SceneManager.LoadScene(sceneIndex);
     }

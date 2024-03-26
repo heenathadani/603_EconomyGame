@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 6257507493614654332}
   - component: {fileID: 3603241339125541612}
   - component: {fileID: 6664485350281790333}
+  - component: {fileID: 1364871769261527451}
   m_Layer: 6
   m_Name: Capital
   m_TagString: CapitalUnit
@@ -228,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bda28730f9e631468c2ff702f92899b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 500
+  maxHP: 1000
   immune: 0
   hostility: 0
   unitType: 1
@@ -283,3 +284,23 @@ MonoBehaviour:
   abilitySprite: {fileID: 0}
   timer: 0
   unitPrefab: {fileID: 7836227749016348371, guid: f1f7246accd024a4392cc893e2b700db, type: 3}
+--- !u!114 &1364871769261527451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6159348304156585970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2efa6b06017c487418281bd4ba16c560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 125
+  cooldown: 0
+  abilityName: Spawn Tank Spore
+  description: Ability Description
+  requiredUnit: 2
+  abilitySprite: {fileID: 0}
+  timer: 0
+  unitPrefab: {fileID: 7836227749016348371, guid: 59747aae9cc1717409aa7e0c6cb3a809, type: 3}
