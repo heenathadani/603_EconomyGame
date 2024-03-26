@@ -41,9 +41,13 @@ public class Biomass : MonoBehaviour
                 amount = biomassAmount; // If less than 10 biomass remains, only deplete the remaining amount
             }
             biomassAmount -= amount;
-            worker.CollectBiomass(amount);
+            CollectBiomass(amount);
             yield return new WaitForSeconds(1); // Wait for 1 second
         }
         Destroy(gameObject);
+    }
+    public void CollectBiomass(float amount)
+    {
+       GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>().AddBiomass(amount);
     }
 }
