@@ -3,6 +3,20 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagers : MonoBehaviour
 {
+    private static int _currentLevel = 1; // Start at 1 to avoid the main menu
+    public void LoadNextLevel()
+    {
+        _currentLevel++;
+        SceneManager.LoadScene(_currentLevel);
+    }
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(_currentLevel);
+    }
+    public void ClearData()
+    {
+        _currentLevel = 0;
+    }
     public void LoadScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
