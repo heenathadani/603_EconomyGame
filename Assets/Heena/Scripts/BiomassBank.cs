@@ -5,8 +5,8 @@ using UnityEngine;
 public class BiomassBank : MonoBehaviour
 {
     [SerializeField]
-    private int biomass = 100;
-    public int Biomass
+    private float biomass = 100;
+    public float Biomass
     {
         get { return biomass; }
         private set 
@@ -22,12 +22,12 @@ public class BiomassBank : MonoBehaviour
         UpdateBiomassText(Biomass);
     }
 
-    public void AddBiomass(int amount)
+    public void AddBiomass(float amount)
     {
         Biomass += amount;
     }
 
-    public bool SpendBiomass(int amount)
+    public bool SpendBiomass(float amount)
     {
         if (Biomass >= amount)
         {
@@ -37,7 +37,7 @@ public class BiomassBank : MonoBehaviour
         return false;
     }
 
-    public void UpdateBiomassText(int amount) // Update this method
+    public void UpdateBiomassText(float amount) // Update this method
     {
         biomassText.text = "Biomass: " + amount;
     }
