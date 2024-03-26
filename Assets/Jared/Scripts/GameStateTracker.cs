@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameStateTracker : MonoBehaviour
 {
-    public enum GameState { Playing, Win, Fail }
+    public enum GameState { Paused, Playing, Win, Fail }
     [SerializeField]
     private GameState _state = GameState.Playing;
 
@@ -40,9 +40,10 @@ public class GameStateTracker : MonoBehaviour
         {
             _state = GameState.Win;
         }
-        else if(GetGameTime()<=0)
+        else if(_state != GameState.Paused)
         {
-            _state = GameState.Fail;
+            if (GetGameTime() <= 0)
+                _state = GameState.Fail;
         }
 
 

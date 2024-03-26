@@ -17,5 +17,7 @@ public class UnitSpawner : UnitAbility
         Vector3 spawnPt = transform.position;
         spawnPt.z -= GetComponent<MeshRenderer>().bounds.extents.z + 1;
         Instantiate(unitPrefab, spawnPt, Quaternion.identity);
+
+        base.Execute();
     }
 }
