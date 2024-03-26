@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1640932773452149672}
   - component: {fileID: 8539524943343539964}
   - component: {fileID: 8798645893084151136}
+  - component: {fileID: 4576699044085152003}
   m_Layer: 3
   m_Name: BasicUnit
   m_TagString: Player
@@ -124,6 +125,8 @@ MonoBehaviour:
   maxHP: 50
   immune: 0
   hostility: 0
+  unitType: 3
+  unitName: Worker Spore
   attackDmg: 10
   attackRange: 3
   attackDuration: 0.5
@@ -151,3 +154,24 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4576699044085152003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987138117285429574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2a3579c77317ff46961f436ed75896d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 200
+  cooldown: 0
+  abilityName: Morph to Melee Spore Structure
+  description: Morphs this worker into a Melee Spore Structure, allowing you to spawn
+    Melee Spores from the Capital.
+  requiredUnit: 0
+  abilitySprite: {fileID: 0}
+  timer: 0
+  unitToMorphTo: {fileID: 6159348304156585970, guid: 44eb349569e29b94ebf49d14b8ba2300, type: 3}

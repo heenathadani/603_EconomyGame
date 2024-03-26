@@ -28,6 +28,9 @@ public class Unit : MonoBehaviour
     public bool immune = false;
     [Tooltip("Hostility of this unit.")]
     public Hostility hostility = Hostility.Friendly;
+    [Tooltip("The type of this unit")]
+    public UnitType unitType = UnitType.None;
+    public string unitName = "";
 
     public float attackDmg = 0;
     public float attackRange = 0;
@@ -51,14 +54,21 @@ public class Unit : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
+        name = unitName.Equals("") ? GameUtilities.GetDisplayed(unitType) : unitName;
+
+
         // Add this unit to the list ofselectable units
         switch (hostility)
         {
             case Hostility.Friendly:
-                SelectionManager.allFriendlyUnits.Add(this);
+                if (!SelectionManager.allFriendlyUnits.ContainsKey(unitType))
+                    SelectionManager.allFriendlyUnits[unitType] = new HashSet<Unit>();
+                SelectionManager.allFriendlyUnits[unitType].Add(this);
                 break;
             default:
-                SelectionManager.allOtherUnits.Add(this);
+                if (!SelectionManager.allOtherUnits.ContainsKey(unitType))
+                    SelectionManager.allOtherUnits[unitType] = new HashSet<Unit>();
+                SelectionManager.allOtherUnits[unitType].Add(this);
                 break;
         }
 
@@ -172,6 +182,18 @@ public class Unit : MonoBehaviour
         hp = Mathf.Clamp(hp - dmg, 0, maxHP);
         if (hp <= 0)
         {
+            if (hostility == Hostility.Friendly)
+            {
+                SelectionManager.allFriendlyUnits[unitType].Remove(this);
+                if (SelectionManager.allFriendlyUnits[unitType].Count == 0)
+                    SelectionManager.allFriendlyUnits.Remove(unitType);
+            }
+            else
+            {
+                SelectionManager.allOtherUnits[unitType].Remove(this);
+                if (SelectionManager.allOtherUnits[unitType].Count == 0)
+                    SelectionManager.allOtherUnits.Remove(unitType);
+            }
             OnKilled?.Invoke(this);
             // Destroy after a delay
             Destroy(gameObject, 1f);

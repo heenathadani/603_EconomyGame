@@ -9,6 +9,7 @@ public abstract class UnitAbility : MonoBehaviour
     public float cooldown = 0f;
     public string abilityName = "Ability";
     public string description = "Ability Description";
+    public UnitType requiredUnit = UnitType.None;
     public Sprite abilitySprite;
 
     [HideInInspector]
@@ -17,7 +18,7 @@ public abstract class UnitAbility : MonoBehaviour
     const string defaultImgPath = "Assets/Art/Sprites/Ability_Default.png";
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         if (!abilitySprite)
         {

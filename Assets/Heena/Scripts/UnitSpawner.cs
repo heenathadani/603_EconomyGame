@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class UnitSpawner : UnitAbility
 {
-    public GameObject unitWorkerPrefab;
+    public GameObject unitPrefab;
 
-    Vector3 spawnPt;
-
-    private void Start()
+    protected override void Start()
     {
-        spawnPt = transform.position;
-        spawnPt.z -= GetComponent<MeshRenderer>().bounds.extents.z + 1;
+        base.Start();
     }
 
     public override void Execute()
     {
         // Spawn the new worker and set it to Unit layer
-        GameObject newWorker = Instantiate(unitWorkerPrefab, spawnPt, Quaternion.identity);
+        Vector3 spawnPt = transform.position;
+        spawnPt.z -= GetComponent<MeshRenderer>().bounds.extents.z + 1;
+        GameObject newWorker = Instantiate(unitPrefab, spawnPt, Quaternion.identity);
         newWorker.layer = LayerMask.NameToLayer("Unit");
     }
 }

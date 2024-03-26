@@ -16,7 +16,7 @@ public class SelectionManager : MonoBehaviour
     List<Unit> newSelected, selected, pending;
 
     // Sets automatically handle dupes
-    public static HashSet<Unit> allFriendlyUnits, allOtherUnits;
+    public static Dictionary<UnitType, HashSet<Unit>> allFriendlyUnits, allOtherUnits;
 
     Vector2 mouseStart;
     Camera cam;
@@ -129,7 +129,7 @@ public class SelectionManager : MonoBehaviour
     /// <param name="selectedList">The list to append units inside the selection box to</param>
     /// <param name="bounds">The selection box bounds</param>
     /// <param name="oneUnitOnly">If true, only populates the selected list with the first unit that lies in the selection box.</param>
-    List<Unit> GetUnitsInSelectionBox(HashSet<Unit> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
+    List<Unit> GetUnitsInSelectionBox(Dictionary<UnitType, HashSet<Unit>> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
     {
         List<Unit> selectedUnits = new();
 
@@ -144,14 +144,17 @@ public class SelectionManager : MonoBehaviour
         }
 
         // Simple AABB test to see if the unit's inside the selection box
-        foreach (Unit u in unitsToCheck)
+        foreach (var pair in unitsToCheck)
         {
-            Vector2 unitPos = cam.WorldToScreenPoint(u.transform.position);
-            if (unitPos.x > bounds.min.x && unitPos.x < bounds.max.x && unitPos.y > bounds.min.y && unitPos.y < bounds.max.y)
+            foreach (Unit u in pair.Value)
             {
-                selectedUnits.Add(u);
-                u.Select();
-                if (oneUnitOnly) break;
+                Vector2 unitPos = cam.WorldToScreenPoint(u.transform.position);
+                if (unitPos.x > bounds.min.x && unitPos.x < bounds.max.x && unitPos.y > bounds.min.y && unitPos.y < bounds.max.y)
+                {
+                    selectedUnits.Add(u);
+                    u.Select();
+                    if (oneUnitOnly) break;
+                }
             }
         }
         return selectedUnits;
