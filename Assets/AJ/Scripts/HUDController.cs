@@ -10,6 +10,7 @@ public class HUDController : MonoBehaviour
     public BiomassBank biomassBank;
     public TextMeshProUGUI errorText;
     public TextMeshProUGUI unitNameText;
+    Unit focusedUnit;
 
     List<Button> abilityButtons;
 
@@ -77,7 +78,13 @@ public class HUDController : MonoBehaviour
                 abilityButtons[i].gameObject.SetActive(false);
 
             // Display the unit name
-            unitNameText.text = units[0].name.ToString();
+            unitNameText.text = $"{units[0].name} ({(int)units[0].currentHP}/{(int)units[0].maxHP} HP)";
+
+            // Switch to listen to the new focused unit's Damage Taken event
+            if (focusedUnit)
+                focusedUnit.OnDamageTaken -= UpdateUnitNameDisplay;
+            focusedUnit = units[0];
+            focusedUnit.OnDamageTaken += UpdateUnitNameDisplay;
         }
         else
         {
@@ -88,5 +95,10 @@ public class HUDController : MonoBehaviour
                 b.gameObject.SetActive(false);
             }
         }
+    }
+
+    void UpdateUnitNameDisplay()
+    {
+        unitNameText.text = $"{focusedUnit.name} ({(int)focusedUnit.currentHP}/{(int)focusedUnit.maxHP} HP)";
     }
 }

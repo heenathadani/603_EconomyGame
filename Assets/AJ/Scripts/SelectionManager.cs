@@ -21,6 +21,9 @@ public class SelectionManager : MonoBehaviour
     Vector2 mouseStart;
     Camera cam;
     public BiomassBank biomassBank;
+
+    int unitMask = (1 << 6) | (1 << 7) | (1 << 8);
+
     private void Awake()
     {
         newSelected = new();
@@ -118,17 +121,17 @@ public class SelectionManager : MonoBehaviour
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = cam.nearClipPlane;
             // Raycast against the environment or other units
-            if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, (1 << 0) | (1 << 3)))
+            if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, (1 << 0) | unitMask))
             {
                 if (hit.collider.TryGetComponent(out Unit target))
                 {
                     foreach (Unit u in selected)
-                        u.Follow(target);
+                        u.Follow(target, true);
                 }
                 else
                 {
                     foreach (Unit u in selected)
-                        u.MoveTo(hit.point);
+                        u.MoveTo(hit.point, true);
                 }
             }
         }
@@ -148,7 +151,7 @@ public class SelectionManager : MonoBehaviour
         // For a single click and no drag, raycast against Unit layer
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = cam.nearClipPlane;
-        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, 1 << 3))
+        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, unitMask))
         {
             selectedUnits.Add(hit.collider.GetComponent<Unit>());
             if (oneUnitOnly)

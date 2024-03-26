@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3460972196751171700}
   - component: {fileID: 7028588674710026821}
   - component: {fileID: 8770144740345682689}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: MeleeSporeStructure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,4 +150,7 @@ MonoBehaviour:
   attackRange: 0
   attackDuration: 0.25
   attackRate: 0.15
+  detectionRange: 0
   selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
+  currentHP: 0
+  unitState: 0
