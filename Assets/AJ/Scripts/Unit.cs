@@ -240,27 +240,33 @@ public class Unit : MonoBehaviour
         currentHP = Mathf.Clamp(currentHP - dmg, 0, maxHP);
         if (currentHP <= 0)
         {
-            if (hostility == Hostility.Friendly)
-            {
-                SelectionManager.allFriendlyUnits[unitType].Remove(this);
-                if (SelectionManager.allFriendlyUnits[unitType].Count == 0)
-                    SelectionManager.allFriendlyUnits.Remove(unitType);
-            }
-            else
-            {
-                SelectionManager.allOtherUnits[unitType].Remove(this);
-                if (SelectionManager.allOtherUnits[unitType].Count == 0)
-                    SelectionManager.allOtherUnits.Remove(unitType);
-            }
-            OnKilled?.Invoke(this);
-            // Destroy
-            Destroy(gameObject);
+            Destroy();
         }
         else
         {
             OnDamageTaken?.Invoke();
         }
     }
+
+    public void Destroy()
+    {
+        if (hostility == Hostility.Friendly)
+        {
+            SelectionManager.allFriendlyUnits[unitType].Remove(this);
+            if (SelectionManager.allFriendlyUnits[unitType].Count == 0)
+                SelectionManager.allFriendlyUnits.Remove(unitType);
+        }
+        else
+        {
+            SelectionManager.allOtherUnits[unitType].Remove(this);
+            if (SelectionManager.allOtherUnits[unitType].Count == 0)
+                SelectionManager.allOtherUnits.Remove(unitType);
+        }
+        OnKilled?.Invoke(this);
+        // Destroy
+        Destroy(gameObject);
+    }
+
     public void Heal(float healAmt)
     {
         currentHP = Mathf.Clamp(currentHP + healAmt, 0, maxHP);
