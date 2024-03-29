@@ -33,47 +33,53 @@ public class HUDController : MonoBehaviour
         {
             UnitAbility[] abilities = units[0].GetComponents<UnitAbility>();
             int i = 0;
-            for (; i < abilities.Length; i++)
-            {
-                if (i < abilityButtons.Count)
-                {
-                    UnitAbility a = abilities[i];
 
-                    abilityButtons[i].onClick.RemoveAllListeners();
-                    abilityButtons[i].onClick.AddListener(() =>
+            // Only list abilities of friendly units
+            if (units[0].Hostility == Hostility.Friendly)
+            {
+                for (; i < abilities.Length; i++)
+                {
+                    if (i < abilityButtons.Count)
                     {
-                        // Check if there is at least one of the required unit type for this ability
-                        if (a.requiredUnit == UnitType.None || SelectionManager.allFriendlyUnits.ContainsKey(a.requiredUnit))
+                        UnitAbility a = abilities[i];
+
+                        abilityButtons[i].onClick.RemoveAllListeners();
+                        abilityButtons[i].onClick.AddListener(() =>
                         {
-                            if (a.timer <= 0f && biomassBank.SpendBiomass(a.cost))
+                            // Check if there is at least one of the required unit type for this ability
+                            if (a.requiredUnit == UnitType.None || SelectionManager.allFriendlyUnits.ContainsKey(a.requiredUnit))
                             {
-                                a.timer = a.cooldown;
-                                a.Execute();
+                                if (a.timer <= 0f && biomassBank.SpendBiomass(a.cost))
+                                {
+                                    a.timer = a.cooldown;
+                                    a.Execute();
+                                }
+                                else
+                                {
+                                    errorText.text = $"Insufficient Biomass. Collect more Biomass.";
+                                    GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
+                                }
                             }
                             else
                             {
-                                errorText.text = $"Insufficient Biomass. Collect more Biomass.";
+                                errorText.text = $"{a.abilityName} requires a {GameUtilities.GetDisplayed(a.requiredUnit)}.";
                                 GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
                             }
-                        }
-                        else
-                        {
-                            errorText.text = $"{a.abilityName} requires a {GameUtilities.GetDisplayed(a.requiredUnit)}.";
-                            GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
-                        }
-                    });
-                    abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
-                    TextMeshProUGUI[] texts = abilityButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
-                    texts[0].text = a.abilityName;
-                    texts[1].text = $"{a.cost} Biomass";
-                    abilityButtons[i].gameObject.SetActive(true);
-                }
-                else
-                {
-                    Debug.LogWarning($"A selected unit has more than {abilityButtons.Count} abilities! Only the first {abilityButtons.Count} abilities on this unit will be usable.");
-                    break;
+                        });
+                        abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
+                        TextMeshProUGUI[] texts = abilityButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                        texts[0].text = a.abilityName;
+                        texts[1].text = $"{a.cost} Biomass";
+                        abilityButtons[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"A selected unit has more than {abilityButtons.Count} abilities! Only the first {abilityButtons.Count} abilities on this unit will be usable.");
+                        break;
+                    }
                 }
             }
+            
             for (; i < abilityButtons.Count; i++)
                 abilityButtons[i].gameObject.SetActive(false);
 
@@ -88,6 +94,7 @@ public class HUDController : MonoBehaviour
         }
         else
         {
+            // disable all ability buttons
             unitNameText.text = "";
             foreach (Button b in abilityButtons)
             {

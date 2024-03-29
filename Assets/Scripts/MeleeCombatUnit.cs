@@ -51,7 +51,7 @@ public class MeleeCombatUnit : Unit
         {
             foreach (Unit u in pair.Value)
             {
-                if (u.hostility == Hostility.Hostile)
+                if (u.Hostility == Hostility.Hostile)
                 {
                     float tempDistance = FindDistance(u.transform.position);
                     if (tempDistance <= visionRange)

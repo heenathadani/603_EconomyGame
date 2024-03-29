@@ -134,6 +134,7 @@ MonoBehaviour:
   selectionPrefab: {fileID: 3423735369810992541, guid: ceda65d003dc44143acb3b8c804dc2f0, type: 3}
   currentHP: 0
   unitState: 0
+  rnaPrefab: {fileID: 6186143877976625682, guid: a839021e920dcc04ebc7ed36f4685393, type: 3}
 --- !u!195 &8032476663572937755
 NavMeshAgent:
   m_ObjectHideFlags: 0

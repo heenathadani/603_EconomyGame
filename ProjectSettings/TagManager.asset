@@ -9,6 +9,7 @@ TagManager:
   - UnitManager
   - Enemy
   - EnemyManager
+  - RNABank
   layers:
   - Default
   - TransparentFX

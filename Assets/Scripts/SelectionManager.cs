@@ -66,7 +66,7 @@ public class SelectionManager : MonoBehaviour
 
             // Get units in selection area
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
-            List<Unit> newPending = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
+            List<Unit> newPending = GetUnitsInSelectionBox(allFriendlyUnits, 1 << 6, bounds);
             foreach (Unit u in pending)
             {
                 if (u) u.SetShowSelection(false);
@@ -82,9 +82,9 @@ public class SelectionManager : MonoBehaviour
 
             // Get units in selection area. If no friendlies, check if there's another type of unit to select.
             Bounds bounds = new(selectBox.anchoredPosition, selectBox.sizeDelta);
-            newSelected = GetUnitsInSelectionBox(allFriendlyUnits, bounds);
+            newSelected = GetUnitsInSelectionBox(allFriendlyUnits, 1 << 6, bounds);
             if (newSelected.Count == 0)
-                newSelected = GetUnitsInSelectionBox(allOtherUnits, bounds, true);
+                newSelected = GetUnitsInSelectionBox(allOtherUnits, (1 << 7) | (1 << 8), bounds, true);
 
             if (newSelected.Count > 0)
             {
@@ -116,7 +116,7 @@ public class SelectionManager : MonoBehaviour
         }
 
         // Handle moving units
-        if (Input.GetMouseButtonDown(1) && selected.Count > 0 && selected[0].hostility == Hostility.Friendly)
+        if (Input.GetMouseButtonDown(1) && selected.Count > 0 && selected[0].Hostility == Hostility.Friendly)
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = cam.nearClipPlane;
@@ -141,17 +141,16 @@ public class SelectionManager : MonoBehaviour
     /// Adds all units from the given set that lie within the given bounds to the selected units list
     /// </summary>
     /// <param name="unitsToCheck">The set of units to check for selection</param>
-    /// <param name="selectedList">The list to append units inside the selection box to</param>
     /// <param name="bounds">The selection box bounds</param>
     /// <param name="oneUnitOnly">If true, only populates the selected list with the first unit that lies in the selection box.</param>
-    List<Unit> GetUnitsInSelectionBox(Dictionary<UnitType, HashSet<Unit>> unitsToCheck, Bounds bounds, bool oneUnitOnly = false)
+    List<Unit> GetUnitsInSelectionBox(Dictionary<UnitType, HashSet<Unit>> unitsToCheck, int unitLayer, Bounds bounds, bool oneUnitOnly = false)
     {
         List<Unit> selectedUnits = new();
 
         // For a single click and no drag, raycast against Unit layer
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = cam.nearClipPlane;
-        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, unitMask))
+        if (Physics.Raycast(transform.position, cam.ScreenToWorldPoint(mousePos) - transform.position, out RaycastHit hit, 500f, unitLayer))
         {
             selectedUnits.Add(hit.collider.GetComponent<Unit>());
             if (oneUnitOnly)

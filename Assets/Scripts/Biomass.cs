@@ -8,13 +8,19 @@ public class Biomass : Unit
 
     public float biomassAmount = 100;
     public float depletionTime = 10f;// Time in seconds to deplete the biomass
+
+    bool extracting = false;
+
     public void OnTriggerEnter(Collider other)
     {
-        Unit unit = other.GetComponent<Unit>();
-        if (unit && unit.unitType == UnitType.WorkerUnit)
+        if (extracting) return;
+        
+        if (other.TryGetComponent(out Unit unit) && unit.Hostility == Hostility.Friendly && unit.unitType == UnitType.WorkerUnit)
         {
+            unit.Hostility = Hostility.Neutral;
             unit.Destroy();
             StartDepleting(unit);
+            extracting = true;
             OnBeginExtract?.Invoke();
         }
     }
@@ -22,19 +28,7 @@ public class Biomass : Unit
     {
         StartCoroutine(DepleteOverTime(worker));
     }
-    //private IEnumerator DepleteOverTime(Unit worker)
-    //{
-    //    float rate = biomassAmount / depletionTime; // Amount to deplete per second
 
-    //    while (biomassAmount > 0)
-    //    {
-    //        float amount = rate * Time.deltaTime; // Amount to deplete this frame
-    //        biomassAmount -= amount;
-    //        worker.CollectBiomass(amount);
-    //        yield return null; // Wait for next frame
-    //    }
-    //    Destroy(gameObject);
-    //}
     private IEnumerator DepleteOverTime(Unit worker)
     {
         while (biomassAmount > 0)

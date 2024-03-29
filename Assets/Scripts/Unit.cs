@@ -36,8 +36,23 @@ public class Unit : MonoBehaviour
     public float maxHP = 0f;
     [Tooltip("If this unit is immune to damage. If Max HP was set to 0, this does not matter.")]
     public bool immune = false;
-    [Tooltip("Hostility of this unit.")]
-    public Hostility hostility = Hostility.Friendly;
+
+    [SerializeField, Tooltip("Hostility of this unit.")]
+    private Hostility hostility = Hostility.Friendly;
+    public Hostility Hostility 
+    { 
+        get { return hostility; }
+        set
+        {
+            if (hostility != value)
+            {
+                RemoveFromUnitList();
+                hostility = value;
+                AddToUnitList();
+            }
+        }
+    }
+    
     [Tooltip("The type of this unit")]
     public UnitType unitType = UnitType.None;
     public string unitName = "";
@@ -214,7 +229,7 @@ public class Unit : MonoBehaviour
     
     public void SetHostility(Hostility hostility)
     {
-        this.hostility = hostility;
+        this.Hostility = hostility;
 
         if (selectIcon)
         {
@@ -250,6 +265,32 @@ public class Unit : MonoBehaviour
 
     public void Destroy()
     {
+        RemoveFromUnitList();
+        OnKilled?.Invoke(this);
+        // Destroy
+        Destroy(gameObject);
+    }
+
+    void AddToUnitList()
+    {
+        // Add this unit to the list ofselectable units
+        switch (hostility)
+        {
+            case Hostility.Friendly:
+                if (!SelectionManager.allFriendlyUnits.ContainsKey(unitType))
+                    SelectionManager.allFriendlyUnits[unitType] = new HashSet<Unit>();
+                SelectionManager.allFriendlyUnits[unitType].Add(this);
+                break;
+            default:
+                if (!SelectionManager.allOtherUnits.ContainsKey(unitType))
+                    SelectionManager.allOtherUnits[unitType] = new HashSet<Unit>();
+                SelectionManager.allOtherUnits[unitType].Add(this);
+                break;
+        }
+    }
+
+    void RemoveFromUnitList()
+    {
         if (hostility == Hostility.Friendly)
         {
             SelectionManager.allFriendlyUnits[unitType].Remove(this);
@@ -262,9 +303,6 @@ public class Unit : MonoBehaviour
             if (SelectionManager.allOtherUnits[unitType].Count == 0)
                 SelectionManager.allOtherUnits.Remove(unitType);
         }
-        OnKilled?.Invoke(this);
-        // Destroy
-        Destroy(gameObject);
     }
 
     public void Heal(float healAmt)
@@ -296,7 +334,7 @@ public class Unit : MonoBehaviour
             return;
         }
         unitState = UnitState.Moving;
-        attacking = other.hostility != hostility && !other.immune;
+        attacking = other.Hostility != hostility && !other.immune;
         stopTmr = 0f;
         followingCommand = commanded;
     }
