@@ -8,6 +8,9 @@ public class Tutorial1 : MonoBehaviour
     public TextMeshProUGUI tutorialText;
     Unit capital;
     public Biomass biomassUnit;
+    public Biomass biomass2;
+    public Biomass biomass3;
+    SceneManagers sceneManager;
 
     // Start is called before the first frame update
     void Start()
@@ -33,12 +36,15 @@ public class Tutorial1 : MonoBehaviour
     {
         tutorialText.text = "The worker is now merged with the Biomass and has begun extracting from it.\nThe Top Left corner of the screen indicates your Biomass count. \nIt is your primary resource for everything.";
         biomassUnit.OnBeginExtract -= ShowBiomassTutorial;
+        biomass2.gameObject.SetActive(true);
+        biomass3.gameObject.SetActive(true);
         Invoke("ShowEndTutorial", 5);
         Invoke("ShowEndText", 2);
+        sceneManager.LoadScene(2);
     }
     void ShowEndTutorial()
     {
-        tutorialText.text = "Amazing! Look for 2 more biomass pockets, spawn a worker and morph them to a capital structure!";
+        tutorialText.text = "Amazing! Look for 2 more biomass pockets, spawn a worker and morph them to a melee spore structure!";
     }
     void ShowEndText()
     {

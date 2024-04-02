@@ -15,7 +15,7 @@ public class UnitSpawner : UnitAbility
     {
         // Spawn the new worker and set it to Unit layer
         Vector3 spawnPt = transform.position;
-        spawnPt.z -= GetComponent<MeshRenderer>().bounds.extents.z + 1;
+        spawnPt.z -= GetComponent<MeshRenderer>().bounds.extents.z + 5;
         Instantiate(unitPrefab, spawnPt, Quaternion.identity);
 
         base.Execute();

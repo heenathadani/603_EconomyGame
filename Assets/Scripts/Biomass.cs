@@ -26,6 +26,7 @@ public class Biomass : Unit
             StartDepleting(unit);
             extracting = true;
             OnBeginExtract?.Invoke();
+            Debug.Log(OnBeginExtract);
         }
     }
     public void StartDepleting(Unit worker)

@@ -8,12 +8,12 @@ public class SplashScreen : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(ShowForSeconds(gameObjectToHide, 6.0f));
     }
-
-    IEnumerator ShowForSeconds(GameObject targetObject, float delay)
+    private void Update()
     {
-        yield return new WaitForSeconds(delay);  // Wait for the specified delay
-        targetObject.SetActive(false);            // Hide the GameObject
+        if (Input.GetMouseButtonDown(0))
+        {
+            gameObjectToHide.SetActive(false);
+        }
     }
 }
