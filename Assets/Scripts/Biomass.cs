@@ -13,10 +13,14 @@ public class Biomass : Unit
 
     public void OnTriggerEnter(Collider other)
     {
-        if (extracting) return;
+        if (extracting)
+        {
+            return;
+        }
         
         if (other.TryGetComponent(out Unit unit) && unit.Hostility == Hostility.Friendly && unit.unitType == UnitType.WorkerUnit)
         {
+            Debug.Log("Conditions met");
             unit.Hostility = Hostility.Neutral;
             unit.Destroy();
             StartDepleting(unit);
