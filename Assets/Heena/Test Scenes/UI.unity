@@ -485,22 +485,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5156578330422750989, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5156578330422750989, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5156578330422750989, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5156578330422750989, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: SceneManagers, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 5340590457081287038, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -583,14 +567,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5340590457081287038, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5789698552169281903, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0.00012207
-      objectReference: {fileID: 0}
-    - target: {fileID: 5789698552169281903, guid: 8996678d1f48b3a4aaba6536a7a4f06e, type: 3}
-      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
