@@ -11,6 +11,7 @@ public class Tutorial1 : MonoBehaviour
     public Biomass biomass2;
     public Biomass biomass3;
     SceneManagers sceneManager;
+    BiomassBank biomassBank;
 
     // Start is called before the first frame update
     void Start()
@@ -34,13 +35,18 @@ public class Tutorial1 : MonoBehaviour
     }
     void ShowBiomassTutorial()
     {
-        tutorialText.text = "The worker is now merged with the Biomass and has begun extracting from it.\nThe Top Left corner of the screen indicates your Biomass count. \nIt is your primary resource for everything.";
+        Invoke("ShowText", 8);
         biomassUnit.OnBeginExtract -= ShowBiomassTutorial;
         biomass2.gameObject.SetActive(true);
         biomass3.gameObject.SetActive(true);
-        Invoke("ShowEndTutorial", 5);
-        Invoke("ShowEndText", 2);
-        sceneManager.LoadScene(2);
+        Invoke("ShowEndTutorial", 8);
+        Invoke("ShowEndText", 5);
+        if(biomassBank.Biomass > 1000)
+            sceneManager.LoadScene(6);
+    }
+    void ShowText()
+    {
+        tutorialText.text = "The worker is now merged with the Biomass and has begun extracting from it.\nThe Top Left corner of the screen indicates your Biomass count. \nIt is your primary resource for everything.";
     }
     void ShowEndTutorial()
     {
