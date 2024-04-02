@@ -8,7 +8,7 @@ public class SplashScreen : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(ShowForSeconds(gameObjectToHide, 5.0f));
+        StartCoroutine(ShowForSeconds(gameObjectToHide, 6.0f));
     }
 
     IEnumerator ShowForSeconds(GameObject targetObject, float delay)

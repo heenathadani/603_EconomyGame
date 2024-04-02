@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static Biomass;
 
 public enum Hostility
 {
@@ -265,9 +266,9 @@ public class Unit : MonoBehaviour
 
     public void Destroy()
     {
+
         RemoveFromUnitList();
         OnKilled?.Invoke(this);
-        // Destroy
         Destroy(gameObject);
     }
 

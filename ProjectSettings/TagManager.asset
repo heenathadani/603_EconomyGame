@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - EnemyManager
   - RNABank
+  - Biomass
   layers:
   - Default
   - TransparentFX

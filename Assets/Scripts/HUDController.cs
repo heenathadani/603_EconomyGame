@@ -66,7 +66,7 @@ public class HUDController : MonoBehaviour
                                 GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
                             }
                         });
-                        abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
+                        //abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
                         TextMeshProUGUI[] texts = abilityButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
                         texts[0].text = a.abilityName;
                         texts[1].text = $"{a.cost} Biomass";

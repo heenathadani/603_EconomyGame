@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI;
     public static PauseMenu instnace;
     public GameObject HUD;
+    public TMPro.TextMeshProUGUI tipText;   
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
+        tipText.gameObject.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
         HUD.SetActive(true);
@@ -39,6 +41,7 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         pauseMenuUI.SetActive(true);
+        tipText.gameObject.SetActive(false);
         HUD.SetActive(false);
         Time.timeScale = 0f;
         GameIsPaused = true;
