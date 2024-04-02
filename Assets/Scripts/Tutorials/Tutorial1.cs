@@ -11,7 +11,7 @@ public class Tutorial1 : MonoBehaviour
     public Biomass biomass2;
     public Biomass biomass3;
     SceneManagers sceneManager;
-    BiomassBank biomassBank;
+    public BiomassBank biomassBank;
 
     // Start is called before the first frame update
     void Start()
@@ -41,8 +41,8 @@ public class Tutorial1 : MonoBehaviour
         biomass3.gameObject.SetActive(true);
         Invoke("ShowEndTutorial", 8);
         Invoke("ShowEndText", 5);
-        if(biomassBank.Biomass > 1000)
-            sceneManager.LoadScene(6);
+        //if(biomassBank.Biomass > 1000)
+        //    sceneManager.LoadScene(6);
     }
     void ShowText()
     {
