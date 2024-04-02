@@ -252,16 +252,21 @@ public class Unit : MonoBehaviour
     public void TakeDamage(float dmg)
     {
         if (immune) return;
+        SetCurrentHP(currentHP - dmg);
+    }
 
-        currentHP = Mathf.Clamp(currentHP - dmg, 0, maxHP);
-        if (currentHP <= 0)
+    public void SetCurrentHP(float hp)
+    {
+        hp = Mathf.Clamp(hp, 0, maxHP);
+        if (hp <= 0)
         {
             Destroy();
         }
-        else
+        else if (hp < currentHP)
         {
             OnDamageTaken?.Invoke();
         }
+        currentHP = hp;
     }
 
     public void Destroy()

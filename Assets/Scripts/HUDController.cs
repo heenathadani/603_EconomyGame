@@ -3,22 +3,67 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class HUDController : MonoBehaviour
 {
     public GameObject abilitiesBoard;
+    public GameObject commanderBoard;
     public BiomassBank biomassBank;
     public TextMeshProUGUI errorText;
     public TextMeshProUGUI unitNameText;
     Unit focusedUnit;
 
     List<Button> abilityButtons;
+    List<Button> commandButtons;
+
+    CommanderAbilityData[] abilityData;
 
     // Start is called before the first frame update
     void Start()
     {
         abilityButtons = new(abilitiesBoard.GetComponentsInChildren<Button>(true));
+        commandButtons = new(commanderBoard.GetComponentsInChildren<Button>(true));
         SelectionManager.OnUnitSelectionChanged += OnUnitsSelected;
+
+        // Read in selected commander abilities
+        try
+        {
+            abilityData = JsonUtility.FromJson<CommanderAbilityData[]>(File.ReadAllText("save_data/abilities.json"));
+        }
+        catch
+        {
+            Debug.LogWarning("Comander Ability data was not read successfully.");
+        }
+
+        // Tie the selected commander abilities to the respective onclicks
+        for (int i = 0; i < commandButtons.Count; i++)
+        {
+            if (i < abilityData.Length && abilityData[i].selected)
+            {
+                CommanderAbility a = commandButtons[i].GetComponent<CommanderAbility>();
+                CommanderAbilityData d = abilityData[i];
+                commandButtons[i].onClick.AddListener(() =>
+                {
+                    if (a.timer <= 0f)
+                    {
+                        d.function();
+                        a.timer = d.cooldown;
+                    }
+                    else
+                    {
+                        errorText.text = $"This Commander Ability is still on cooldown.";
+                        GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
+                    }
+                });
+
+                //commandButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
+                TextMeshProUGUI[] texts = commandButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                texts[0].text = abilityData[i].name;
+                texts[1].text = $"{abilityData[i].cooldown} Second Cooldown";
+                abilityButtons[i].gameObject.SetActive(true);
+            }
+        }
     }
 
     // Update is called once per frame

@@ -18,7 +18,7 @@ public class Enemy : Unit
         OnKilled += (Unit u) =>
         {
             // 10% chance to drop RNA sample
-            if (Random.Range(0, 100) < 100)
+            if (Random.Range(0, 100) < 10)
             {
                 if (rnaPrefab)
                     Instantiate(rnaPrefab, transform.position, Quaternion.identity);
