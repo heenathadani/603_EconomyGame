@@ -39,6 +39,6 @@ public class BiomassBank : MonoBehaviour
 
     public void UpdateBiomassText(float amount) // Update this method
     {
-        biomassText.text = "Biomass: " + amount;
+        biomassText.text =  "" + amount;
     }
 }

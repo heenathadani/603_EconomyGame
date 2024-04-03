@@ -72,6 +72,6 @@ public class RNABank : MonoBehaviour
 
     public void UpdateRNAText(float amount) // Update this method
     {
-        rnaText.text = "RNA Samples: " + amount;
+        rnaText.text = "" + amount;
     }
 }
