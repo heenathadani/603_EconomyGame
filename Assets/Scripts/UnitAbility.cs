@@ -15,11 +15,11 @@ public abstract class UnitAbility : MonoBehaviour
     public UnitType requiredUnit = UnitType.None;
     public Sprite abilitySprite;
 
-    float timer = 0f;
+    protected float timer = 0f;
 
     const string defaultImgPath = "Assets/Art/Sprites/Ability_Default.png";
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if (!abilitySprite)
         {

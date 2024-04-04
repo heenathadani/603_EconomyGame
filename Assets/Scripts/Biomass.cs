@@ -7,9 +7,17 @@ public class Biomass : Unit
     public event OnBeginExtractHandler OnBeginExtract;
 
     public float biomassAmount = 100;
-    public float depletionTime = 10f;// Time in seconds to deplete the biomass
+    public float collectionRate = 10f;
 
     bool extracting = false;
+
+    BiomassBank bank;
+
+    protected override void Start()
+    {
+        base.Start();
+        bank = GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>();
+    }
 
     public void OnTriggerEnter(Collider other)
     {
@@ -38,7 +46,7 @@ public class Biomass : Unit
     {
         while (biomassAmount > 0)
         {
-            float amount = 10; // Amount to deplete each second
+            float amount = collectionRate; // Amount to deplete each second
             if (biomassAmount < amount)
             {
                 amount = biomassAmount; // If less than 10 biomass remains, only deplete the remaining amount
@@ -51,6 +59,9 @@ public class Biomass : Unit
     }
     public void CollectBiomass(float amount)
     {
-       GameObject.FindGameObjectWithTag("BiomassBank").GetComponent<BiomassBank>().AddBiomass(amount);
+        if (bank)
+        {
+            bank.AddBiomass(amount);
+        }
     }
 }
