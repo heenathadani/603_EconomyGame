@@ -18,27 +18,40 @@ public class RNABank : MonoBehaviour
     public int RNA
     {
         get { return rna; }
-        private set 
+        set
         {
             rna = value;
-            int last = 0;
-            for (int i = 0; i < rnaFilePath.Length; i++)
-            {
-                if (rnaFilePath[i] == '/' || rnaFilePath[i] == '\\')
-                    last = i;
-            }
-            if (last != 0)
-            {
-                string subdir = rnaFilePath.Substring(0, last);
-                if (!Directory.Exists(subdir))
-                    Directory.CreateDirectory(subdir);
-            }
+            
             RNAData newData;
             newData.rna = rna;
-            File.WriteAllText(rnaFilePath, JsonUtility.ToJson(newData));
+            SaveTo(rnaFilePath, newData);
 
             UpdateRNAText(value);
         }
+    }
+
+    /// <summary>
+    /// Saves all input data to the specified file path.
+    /// Creates a new file at the location if one doesn't exist.
+    /// </summary>
+    /// <typeparam name="T">Data type to save</typeparam>
+    /// <param name="path">Path to save to</param>
+    /// <param name="data">The data to save</param>
+    public static void SaveTo<T>(string path, T data)
+    {
+        int last = 0;
+        for (int i = 0; i < path.Length; i++)
+        {
+            if (path[i] == '/' || path[i] == '\\')
+                last = i;
+        }
+        if (last != 0)
+        {
+            string subdir = path.Substring(0, last);
+            if (!Directory.Exists(subdir))
+                Directory.CreateDirectory(subdir);
+        }
+        File.WriteAllText(path, JsonUtility.ToJson(data));
     }
 
     private void Start()
@@ -72,6 +85,6 @@ public class RNABank : MonoBehaviour
 
     public void UpdateRNAText(float amount) // Update this method
     {
-        rnaText.text = "" + amount;
+        rnaText.text = $"{amount}";
     }
 }

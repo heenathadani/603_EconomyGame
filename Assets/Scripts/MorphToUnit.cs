@@ -6,24 +6,15 @@ public class MorphToUnit : UnitAbility
 {
     public GameObject unitToMorphTo;
 
-    // Start is called before the first frame update
-    protected override void Start()
+    public override bool Execute()
     {
-        base.Start();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public override void Execute()
-    {
-        // replace this unit with the new unit to morph to
-        Instantiate(unitToMorphTo, transform.position, transform.rotation);
-        GetComponent<Unit>().Destroy();
-
-        base.Execute();
+        if (base.Execute())
+        {
+            // replace this unit with the new unit to morph to
+            Instantiate(unitToMorphTo, transform.position, transform.rotation);
+            GetComponent<Unit>().Destroy();
+            return true;
+        }
+        return false;
     }
 }

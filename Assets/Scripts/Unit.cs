@@ -22,8 +22,9 @@ public enum UnitState
 public class Unit : MonoBehaviour
 {
     // Event handlers
-    public delegate void DamageTakenHandler();
-    public event DamageTakenHandler OnDamageTaken;
+    public delegate void HealthChangedHandler(float newHP);
+    public event HealthChangedHandler OnDamageTaken;
+    public event HealthChangedHandler OnHealed;
     public delegate void KilledHandler(Unit destroyedUnit);
     public event KilledHandler OnKilled;
     public delegate void SelectedHandler(Unit selectedUnit);
@@ -257,21 +258,26 @@ public class Unit : MonoBehaviour
 
     public void SetCurrentHP(float hp)
     {
-        hp = Mathf.Clamp(hp, 0, maxHP);
-        if (hp <= 0)
+        if (hp == currentHP) return;
+
+        float oldHP = currentHP;
+        currentHP = Mathf.Clamp(hp, 0, maxHP);
+        if (currentHP <= 0)
         {
             Destroy();
         }
-        else if (hp < currentHP)
+        else if (currentHP < oldHP)
         {
-            OnDamageTaken?.Invoke();
+            OnDamageTaken?.Invoke(currentHP);
         }
-        currentHP = hp;
+        else
+        {
+            OnHealed?.Invoke(currentHP);
+        }
     }
 
     public void Destroy()
     {
-
         RemoveFromUnitList();
         OnKilled?.Invoke(this);
         Destroy(gameObject);

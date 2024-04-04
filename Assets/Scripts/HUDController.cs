@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using System;
 
 public class HUDController : MonoBehaviour
 {
@@ -15,54 +16,50 @@ public class HUDController : MonoBehaviour
     Unit focusedUnit;
 
     List<Button> abilityButtons;
-    List<Button> commandButtons;
+    Button[] commandButtons;
 
-    CommanderAbilityData[] abilityData;
+    AbilityData data;
+    public string jsonPath = "save_data/abilities.json";
 
     // Start is called before the first frame update
     void Start()
     {
         abilityButtons = new(abilitiesBoard.GetComponentsInChildren<Button>(true));
-        commandButtons = new(commanderBoard.GetComponentsInChildren<Button>(true));
+        commandButtons = commanderBoard.GetComponentsInChildren<Button>(true);
         SelectionManager.OnUnitSelectionChanged += OnUnitsSelected;
 
         // Read in selected commander abilities
-        try
+        if (File.Exists(jsonPath))
         {
-            abilityData = JsonUtility.FromJson<CommanderAbilityData[]>(File.ReadAllText("save_data/abilities.json"));
-        }
-        catch
-        {
-            Debug.LogWarning("Comander Ability data was not read successfully.");
-        }
+            data = JsonUtility.FromJson<AbilityData>(File.ReadAllText("save_data/abilities.json"));
 
-        // Tie the selected commander abilities to the respective onclicks
-        for (int i = 0; i < commandButtons.Count; i++)
-        {
-            if (i < abilityData.Length && abilityData[i].selected)
+            // Tie the selected commander abilities to the respective onclicks
+            for (int i = 0; i < data.selectedIndices.Count; i++)
             {
-                CommanderAbility a = commandButtons[i].GetComponent<CommanderAbility>();
-                CommanderAbilityData d = abilityData[i];
-                commandButtons[i].onClick.AddListener(() =>
+                if (i < commandButtons.Length)
                 {
-                    if (a.timer <= 0f)
+                    // Add the commander ability
+                    UnitAbility u = commandButtons[i].gameObject.AddComponent(Type.GetType(data.abilities[data.selectedIndices[i]])) as UnitAbility;
+                    commandButtons[i].onClick.AddListener(() =>
                     {
-                        d.function();
-                        a.timer = d.cooldown;
-                    }
-                    else
-                    {
-                        errorText.text = $"This Commander Ability is still on cooldown.";
-                        GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
-                    }
-                });
+                        if (!u.Execute())
+                        {
+                            errorText.text = $"This Commander Ability is still on cooldown.";
+                            GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
+                        }
+                    });
 
-                //commandButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
-                TextMeshProUGUI[] texts = commandButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
-                texts[0].text = abilityData[i].name;
-                texts[1].text = $"{abilityData[i].cooldown} Second Cooldown";
-                abilityButtons[i].gameObject.SetActive(true);
+                    //commandButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
+                    TextMeshProUGUI[] texts = commandButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                    texts[0].text = u.abilityName;
+                    texts[1].text = $"{u.cooldown} Second Cooldown";
+                    u.gameObject.SetActive(true);
+                }
             }
+        }
+        else
+        {
+            Debug.LogWarning("Commander Ability data was not read successfully.");
         }
     }
 
@@ -94,10 +91,13 @@ public class HUDController : MonoBehaviour
                             // Check if there is at least one of the required unit type for this ability
                             if (a.requiredUnit == UnitType.None || SelectionManager.allFriendlyUnits.ContainsKey(a.requiredUnit))
                             {
-                                if (a.timer <= 0f && biomassBank.SpendBiomass(a.cost))
+                                if (biomassBank.SpendBiomass(a.cost))
                                 {
-                                    a.timer = a.cooldown;
-                                    a.Execute();
+                                    if (!a.Execute())
+                                    {
+                                        errorText.text = $"This ability is still on cooldown.";
+                                        GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
+                                    }
                                 }
                                 else
                                 {
@@ -111,7 +111,7 @@ public class HUDController : MonoBehaviour
                                 GetComponent<Animator>().Play("ErrorTextFade", -1, 0);
                             }
                         });
-                        TextMeshProUGUI[] texts = abilityButtons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                        TextMeshProUGUI[] texts = abilityButtons[i].GetComponentsInChildren<TextMeshProUGUI>(true);
                         //abilityButtons[i].GetComponent<Image>().sprite = a.abilitySprite;
                         texts[0].text = a.abilityName;
                         texts[1].text = $"{a.cost} Biomass";
@@ -133,9 +133,13 @@ public class HUDController : MonoBehaviour
 
             // Switch to listen to the new focused unit's Damage Taken event
             if (focusedUnit)
+            {
                 focusedUnit.OnDamageTaken -= UpdateUnitNameDisplay;
+                focusedUnit.OnHealed -= UpdateUnitNameDisplay;
+            }
             focusedUnit = units[0];
             focusedUnit.OnDamageTaken += UpdateUnitNameDisplay;
+            focusedUnit.OnHealed += UpdateUnitNameDisplay;
         }
         else
         {
@@ -149,8 +153,8 @@ public class HUDController : MonoBehaviour
         }
     }
 
-    void UpdateUnitNameDisplay()
+    void UpdateUnitNameDisplay(float newHP)
     {
-        unitNameText.text = $"{focusedUnit.name} ({(int)focusedUnit.currentHP}/{(int)focusedUnit.maxHP} HP)";
+        unitNameText.text = $"{focusedUnit.name} ({(int)newHP}/{(int)focusedUnit.maxHP} HP)";
     }
 }

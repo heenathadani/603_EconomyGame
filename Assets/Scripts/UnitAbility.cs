@@ -15,13 +15,11 @@ public abstract class UnitAbility : MonoBehaviour
     public UnitType requiredUnit = UnitType.None;
     public Sprite abilitySprite;
 
-    [HideInInspector]
-    public float timer = 0f;
+    float timer = 0f;
 
     const string defaultImgPath = "Assets/Art/Sprites/Ability_Default.png";
 
-    // Start is called before the first frame update
-    protected virtual void Start()
+    private void Awake()
     {
         if (!abilitySprite)
         {
@@ -45,8 +43,14 @@ public abstract class UnitAbility : MonoBehaviour
     /// The HUDController already handles checking the ability's cost and cooldown before executing,
     /// so no need to also do it here.
     /// </summary>
-    public virtual void Execute()
+    public virtual bool Execute()
     {
-        OnAbilityExecuted?.Invoke();
+        if (timer <= 0f)
+        {
+            timer = cooldown;
+            OnAbilityExecuted?.Invoke();
+            return true;
+        }
+        return false;
     }
 }
