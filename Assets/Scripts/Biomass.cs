@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Biomass : Unit
@@ -9,10 +10,10 @@ public class Biomass : Unit
     public float biomassAmount = 100;
     public float collectionRate = 10f;
 
-    bool extracting = false;
+    int extracting = 0;
 
     BiomassBank bank;
-
+    public List<GameObject> ViralInjector;
     protected override void Start()
     {
         base.Start();
@@ -21,7 +22,7 @@ public class Biomass : Unit
 
     public void OnTriggerEnter(Collider other)
     {
-        if (extracting)
+        if (extracting==3)
         {
             return;
         }
@@ -32,7 +33,8 @@ public class Biomass : Unit
             unit.Hostility = Hostility.Neutral;
             unit.Destroy();
             StartDepleting(unit);
-            extracting = true;
+            ViralInjector[extracting].SetActive(true);
+            extracting ++;
             OnBeginExtract?.Invoke();
             Debug.Log(OnBeginExtract);
         }
