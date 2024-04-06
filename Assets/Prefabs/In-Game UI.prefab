@@ -5113,7 +5113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df78f4d96f2a3a4cba01ba72827571a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rnaText: {fileID: 7728485915715449218}
+  rnaText:
+  - {fileID: 7728485915715449218}
   rnaFilePath: save_data/rna.json
 --- !u!1 &9059334878565217171
 GameObject:
