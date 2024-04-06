@@ -105,6 +105,10 @@ public class AbilitySelector : MonoBehaviour
     }
     void SelectAbility(int index)
     {
+        for (int i = data.selectedIndices.Count - 1; i >= 0; i--)
+            DeselectAbility(data.selectedIndices[i]);
+        data.selectedIndices.Clear();
+
         if (data.selectedIndices.Count < maxSelections)
         {
             data.selectedIndices.Add(index);
@@ -126,10 +130,6 @@ public class AbilitySelector : MonoBehaviour
             abilityButtons[index].onClick.RemoveAllListeners();
             abilityButtons[index].onClick.AddListener(() => SelectAbility(index));
             RNABank.SaveTo(jsonPath, data);
-        }
-        else
-        {
-            AnimateError("An unexpected error has occurred.");
         }
     }
 
