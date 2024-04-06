@@ -19,7 +19,7 @@ namespace Economy.UI
         public float fadeInDuration = 1.0f;
         public float fadeOutDuration = 1.0f;
 
-        private Component[] screens = new Component[0];
+        public Component[] screens = new Component[0];
 
         private UI_Screen prevScreen;
         private UI_Screen currentScreen;
@@ -27,6 +27,8 @@ namespace Economy.UI
         //property to get currentScreen and prevScreen
         public UI_Screen PrevScreen { get { return prevScreen; } }
         public UI_Screen CurrentScreen { get { return currentScreen; } }
+
+        public RNABank rnaBank;
 
         #endregion
 
@@ -102,6 +104,11 @@ namespace Economy.UI
             {
                 //screen.gameObject.SetActive(true);
             }
+        }
+
+        public void PurchaseRNA(int rnaAmount)
+        {
+            rnaBank.RNA += rnaAmount;
         }
         #endregion
     }
