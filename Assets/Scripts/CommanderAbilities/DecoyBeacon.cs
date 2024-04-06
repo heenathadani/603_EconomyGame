@@ -18,7 +18,7 @@ public class DecoyBeacon : UnitAbility
     protected override void Awake()
     {
         base.Awake();
-        beaconPrefab = AssetDatabase.LoadAssetAtPath("Assets/Prefabs/DecoyBeacon.prefab", typeof(GameObject)) as GameObject;
+        beaconPrefab = Resources.Load<GameObject>("DecoyBeacon");
     }
 
     public override bool Execute()
