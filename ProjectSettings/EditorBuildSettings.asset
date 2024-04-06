@@ -4,5 +4,23 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Heena/Test Scenes/UI.unity
+    guid: 1b7f8acd1bcc1cc40a431b726b9d3e1e
+  - enabled: 1
+    path: Assets/Pai/Test Scenes/TutorialOverhaul.unity
+    guid: b811245bb302dd147823a1b29544ec68
+  - enabled: 1
+    path: Assets/Scenes/Base Level.unity
+    guid: 15d6556fba50c604daf62ddc72eac206
+  - enabled: 1
+    path: Assets/Jared/Test Scenes/GameComplete.unity
+    guid: 3f686867d4d248849baa234bfcecf9f5
+  - enabled: 1
+    path: Assets/Jared/Test Scenes/FailScene.unity
+    guid: 86b76239b97497749b2a72b975382c24
+  - enabled: 1
+    path: Assets/Jared/Test Scenes/WinScene.unity
+    guid: 344f302072eedc04cbbebd575404f86c
   m_configObjects: {}

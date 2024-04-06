@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - BiomassBank
+  - CapitalUnit
+  - UnitManager
+  - Enemy
+  - EnemyManager
+  - RNABank
+  - Biomass
   layers:
   - Default
   - TransparentFX
@@ -11,9 +18,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - FriendlyUnit
+  - NeutralUnit
+  - EnemyUnit
   - 
   - 
   - 
