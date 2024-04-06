@@ -15,16 +15,12 @@ public class DecoyBeacon : UnitAbility
         cooldown = 200f;
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        beaconPrefab = Resources.Load<GameObject>("DecoyBeacon");
-    }
-
     public override bool Execute()
     {
         if (base.Execute())
         {
+            beaconPrefab = GameObject.FindWithTag("Ew");
+
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit, 500f, 1 << 0) && beaconPrefab)
             {
                 Instantiate(beaconPrefab, hit.point, Quaternion.identity);

@@ -5075,6 +5075,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DecoyBeacon
       objectReference: {fileID: 0}
+    - target: {fileID: 3436366086831861325, guid: 9d5ad838601d23b4e8ea35e12c4b52d9, type: 3}
+      propertyPath: m_TagString
+      value: Ew
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
