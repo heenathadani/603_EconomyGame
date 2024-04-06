@@ -9,6 +9,7 @@ public enum UnitType
     // Structure unit types
     Capital,
     MeleeUnitStructure,
+    DecoyBeacon,
 
     // "Spore" unit types
     WorkerUnit,
