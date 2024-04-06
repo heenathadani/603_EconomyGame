@@ -424,7 +424,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df78f4d96f2a3a4cba01ba72827571a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rnaText: {fileID: 5747019224875484073}
+  rnaText:
+  - {fileID: 5747019224875484073}
+  - {fileID: 2104335323959790584}
   rnaFilePath: save_data/rna.json
 --- !u!1 &282998976999153545
 GameObject:
@@ -1001,7 +1003,7 @@ MonoBehaviour:
   fadeInDuration: 1
   fadeOutDuration: 1
   screens: []
-  rnaBank: {fileID: 2604001613231838426}
+  rnaBank: {fileID: 4890046272189855030}
 --- !u!114 &7134365724447500776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2626,7 +2628,6 @@ GameObject:
   - component: {fileID: 300436132020256427}
   - component: {fileID: 6886409583379158898}
   - component: {fileID: 2104335323959790584}
-  - component: {fileID: 2604001613231838426}
   m_Layer: 5
   m_Name: RNA
   m_TagString: Untagged
@@ -2755,20 +2756,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2604001613231838426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1397895541998369230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2df78f4d96f2a3a4cba01ba72827571a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rnaText: {fileID: 2104335323959790584}
-  rnaFilePath: save_data/rna.json
 --- !u!1 &1444303082834537367
 GameObject:
   m_ObjectHideFlags: 0
@@ -2779,7 +2766,6 @@ GameObject:
   m_Component:
   - component: {fileID: 280913162371370514}
   - component: {fileID: 3041666824770763550}
-  - component: {fileID: 2616739434374306848}
   m_Layer: 5
   m_Name: Buy3
   m_TagString: Untagged
@@ -2817,24 +2803,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1444303082834537367}
   m_CullTransparentMesh: 1
---- !u!114 &2616739434374306848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444303082834537367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c6fa781907a06e4e8b931216dc37563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 300
-  cooldown: 200
-  abilityName: Decoy Beacon
-  description: Spawns a large, stationary decoy that draws enemies' attention.
-  requiredUnit: 0
-  abilitySprite: {fileID: 0}
 --- !u!1 &1513030936635523641
 GameObject:
   m_ObjectHideFlags: 0
@@ -3880,7 +3848,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8539821271339137296}
   - component: {fileID: 8474044268355907770}
-  - component: {fileID: 3526665758635422245}
   m_Layer: 5
   m_Name: Buy1
   m_TagString: Untagged
@@ -3918,25 +3885,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2379021354346455951}
   m_CullTransparentMesh: 1
---- !u!114 &3526665758635422245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2379021354346455951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 513c0d98181bf9a4fa78b7163761cba7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 300
-  cooldown: 45
-  abilityName: Cell Regeneration
-  description: Fully heal all friendly units within 10m of your Capital, including
-    the Capital itself.
-  requiredUnit: 0
-  abilitySprite: {fileID: 0}
 --- !u!1 &2485710103713843255
 GameObject:
   m_ObjectHideFlags: 0
@@ -4702,7 +4650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df78f4d96f2a3a4cba01ba72827571a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rnaText: {fileID: 458686551691504674}
+  rnaText: []
   rnaFilePath: save_data/rna.json
 --- !u!1 &3437863219995649395
 GameObject:
@@ -5562,7 +5510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jsonPath: save_data/abilities.json
-  rnaBank: {fileID: 2604001613231838426}
+  rnaBank: {fileID: 0}
 --- !u!1 &4200097580045137168
 GameObject:
   m_ObjectHideFlags: 0
@@ -6192,7 +6140,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8657728336325968963}
   - component: {fileID: 6206763316977735104}
-  - component: {fileID: 5980576790977898983}
   m_Layer: 5
   m_Name: Buy2
   m_TagString: Untagged
@@ -6230,25 +6177,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5600064566749522580}
   m_CullTransparentMesh: 1
---- !u!114 &5980576790977898983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5600064566749522580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 513c0d98181bf9a4fa78b7163761cba7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 300
-  cooldown: 45
-  abilityName: Cell Regeneration
-  description: Fully heal all friendly units within 10m of your Capital, including
-    the Capital itself.
-  requiredUnit: 0
-  abilitySprite: {fileID: 0}
 --- !u!1 &5652159286774776958
 GameObject:
   m_ObjectHideFlags: 0
@@ -7750,7 +7678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df78f4d96f2a3a4cba01ba72827571a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rnaText: {fileID: 1709745357887288811}
+  rnaText: []
   rnaFilePath: save_data/rna.json
 --- !u!1 &6717205508089756268
 GameObject:
@@ -9856,7 +9784,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9006283258512581711}
   - component: {fileID: 533710908410409261}
-  - component: {fileID: 5557246958500485530}
   m_Layer: 5
   m_Name: Buy4
   m_TagString: Untagged
@@ -9894,24 +9821,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8840546627274225782}
   m_CullTransparentMesh: 1
---- !u!114 &5557246958500485530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8840546627274225782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c6fa781907a06e4e8b931216dc37563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 300
-  cooldown: 200
-  abilityName: Decoy Beacon
-  description: Spawns a large, stationary decoy that draws enemies' attention.
-  requiredUnit: 0
-  abilitySprite: {fileID: 0}
 --- !u!1 &8923816533268531422
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using TMPro;
 
 public struct RNAData
 {
@@ -11,7 +12,7 @@ public struct RNAData
 public class RNABank : MonoBehaviour
 {
     int rna = 0;
-    public TMPro.TextMeshProUGUI rnaText;
+    public TMPro.TextMeshProUGUI[] rnaText;
 
     public string rnaFilePath = "save_data/rna.json";
 
@@ -85,6 +86,7 @@ public class RNABank : MonoBehaviour
 
     public void UpdateRNAText(float amount) // Update this method
     {
-        rnaText.text = $"{amount}";
+        foreach (TextMeshProUGUI t in rnaText)
+            t.text = $"{amount}";
     }
 }
