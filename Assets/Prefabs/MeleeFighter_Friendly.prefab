@@ -146,7 +146,7 @@ MonoBehaviour:
   maxHP: 100
   immune: 0
   hostility: 0
-  unitType: 4
+  unitType: 5
   unitName: Melee Combat Spore
   attackDmg: 20
   attackRange: 3

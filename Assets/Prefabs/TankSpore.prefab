@@ -146,7 +146,7 @@ MonoBehaviour:
   maxHP: 500
   immune: 0
   hostility: 0
-  unitType: 4
+  unitType: 5
   unitName: Tank Spore
   attackDmg: 5
   attackRange: 3
