@@ -34,12 +34,12 @@ public class HUDController : MonoBehaviour
             data = JsonUtility.FromJson<AbilityData>(File.ReadAllText("save_data/abilities.json"));
 
             // Tie the selected commander abilities to the respective onclicks
-            for (int i = 0; i < data.selectedIndices.Count; i++)
+            for (int i = 0; i < data.selected.Count; i++)
             {
                 if (i < commandButtons.Length)
                 {
                     // Add the commander ability
-                    UnitAbility u = commandButtons[i].gameObject.AddComponent(Type.GetType(data.abilities[data.selectedIndices[i]])) as UnitAbility;
+                    UnitAbility u = commandButtons[i].gameObject.AddComponent(Type.GetType(data.selected[i])) as UnitAbility;
                     commandButtons[i].onClick.AddListener(() =>
                     {
                         if (!u.Execute())
