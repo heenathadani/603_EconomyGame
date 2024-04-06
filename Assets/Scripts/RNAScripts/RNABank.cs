@@ -57,14 +57,14 @@ public class RNABank : MonoBehaviour
 
     private void Start()
     {
-        try
+        if (File.Exists(rnaFilePath))
         {
             RNAData loadedData = JsonUtility.FromJson<RNAData>(File.ReadAllText(rnaFilePath));
             rna = loadedData.rna;
         }
-        catch (DirectoryNotFoundException e)
+        else
         {
-            Debug.LogWarning($"Error attempting to load saved RNA data: {e.Message}");
+            Debug.LogWarning($"RNA data file does not exist.");
         }
         UpdateRNAText(RNA);
     }

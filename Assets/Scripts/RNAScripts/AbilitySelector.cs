@@ -8,7 +8,7 @@ using TMPro;
 public struct AbilityData
 {
     public List<string> abilities;
-    public List<int> selectedIndices;
+    public List<string> selected;
 }
 
 public class AbilitySelector : MonoBehaviour
@@ -39,7 +39,7 @@ public class AbilitySelector : MonoBehaviour
             data = new()
             {
                 abilities = new List<string>(),
-                selectedIndices = new List<int>(),
+                selected = new List<string>(),
             };
         }
 
@@ -53,7 +53,7 @@ public class AbilitySelector : MonoBehaviour
             texts[1].text = a.description;
 
             // Set the button behavior and text
-            if (data.selectedIndices.Contains(i)) // purchased and selected
+            if (data.selected.Contains(a.GetType().ToString())) // purchased and selected
             {
                 texts[2].text = "Deselect";
 
@@ -105,13 +105,25 @@ public class AbilitySelector : MonoBehaviour
     }
     void SelectAbility(int index)
     {
-        for (int i = data.selectedIndices.Count - 1; i >= 0; i--)
-            DeselectAbility(data.selectedIndices[i]);
-        data.selectedIndices.Clear();
-
-        if (data.selectedIndices.Count < maxSelections)
+        for(int i = 0; i < data.selected.Count; i++)
         {
-            data.selectedIndices.Add(index);
+            for (int j = 0; j < abilityButtons.Length; j++)
+            {
+                if (data.selected[i].Equals(abilities[j].GetType().ToString()))
+                {
+                    abilityButtons[j].GetComponentInChildren<TextMeshProUGUI>().text = "Select";
+                    abilityButtons[j].onClick.RemoveAllListeners();
+                    int local = j;
+                    abilityButtons[j].onClick.AddListener(() => SelectAbility(local));
+                }
+            }
+        }
+        data.selected.Clear();
+
+        UnitAbility a = abilities[index];
+        if (data.selected.Count < maxSelections)
+        {
+            data.selected.Add(a.GetType().ToString());
             abilityButtons[index].GetComponentInChildren<TextMeshProUGUI>().text = "Deselect";
             abilityButtons[index].onClick.RemoveAllListeners();
             abilityButtons[index].onClick.AddListener(() => DeselectAbility(index));
@@ -124,7 +136,8 @@ public class AbilitySelector : MonoBehaviour
     }
     void DeselectAbility(int index)
     {
-        if (data.selectedIndices.Remove(index))
+        UnitAbility a = abilities[index];
+        if (data.selected.Remove(a.GetType().ToString()))
         {
             abilityButtons[index].GetComponentInChildren<TextMeshProUGUI>().text = "Select";
             abilityButtons[index].onClick.RemoveAllListeners();
