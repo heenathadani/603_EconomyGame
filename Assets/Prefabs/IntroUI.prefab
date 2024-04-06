@@ -6475,7 +6475,7 @@ MonoBehaviour:
         m_MethodName: SwitchScreens
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 7526258627675761996}
+          m_ObjectArgument: {fileID: 6373963316468481711}
           m_ObjectArgumentAssemblyTypeName: Economy.UI.UI_Screen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
